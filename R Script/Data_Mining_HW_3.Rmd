@@ -5,3 +5,37 @@ date: "4/14/2020"
 output: md_document
 ---
 
+# Predictive Model Building
+
+## Introduction
+
+## Data and Model
+
+## Results
+
+## Conclusion
+
+# What Causes What?
+
+## Introduction
+
+# Clustering and PCA
+
+## Introduction
+
+## Data and Model
+
+## Results
+
+## Conclusion
+
+# Market Segmentation
+
+## Introduction
+
+## Data and Model
+
+## Results
+
+## Conclusion
+
