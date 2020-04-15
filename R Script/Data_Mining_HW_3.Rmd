@@ -5,15 +5,40 @@ date: "4/14/2020"
 output: md_document
 ---
 
+```{r setup}
+knitr::opts_knit$set(root.dir = 'D:/Documents/MA Econ/Spring/Data Mining and Statistical Learning/ECO-395M-Homework-3/data')
+```
+
 # Predictive Model Building
 
+```{r green_data}
+green = read.csv("./greenbuildings.csv")
+```
+
 ## Introduction
+
+There has been an increased focus on creating environmentally conscious buildings, also known as green buildings, which adds a wrinkle into the already complex decision-making process for commercial real estate firms on what types of buildings they should construct. There are a variety of potential benefits that could make investing in constructing green buildings a worthwhile decision:
+
+ - Lower operational costs (water, climate control, waste management, etc.).
+ - Better indoor environments (natural sunlight for instance) could encourage better productivity and lead to happier and more motivated employees, increasing the incentives for a business to rent out those spaces.
+ - Increased PR for both the real estate firm and the business renting the space due to positive public perceptions of green buildings.
+ - Green buildings potentially have longer lives of operation. They are both physically constructed to last longer and less susceptible to energy market shocks.
+ 
+ While this list of benefits seems to make an airtight case for commercial real estate firms to fully switch to constructing green buildings, there is a major issue. Green buildings are generally more costly for these firms to construct as a result of the standards that must be met in order to achieve green building certification from LEED or EnergyStar. However, as described above, it is possibly true that business would be willing to pay hire rents for office space in green buildings. This "Green Premium" would increase the profit incentives for commercial real estate firms to construct green buildings, which could be considered a societal good. However, we can't be certain that the "Green Premium" exists, or if so to what degree having a green certified building would increase rent prices. This analysis has two main goals:
+ 
+ 1. Create the best predictive model possible for rent prices.
+ 2. Use said model to quantify the average change in rental income per sq. ft. associated with attaining green certification, holding any other features of the building constant.
+ 
+ Completing these two goals will give us a tool that we can employ to predict rent prices for buildings given certain features, as well as demonstrate to commercial real estate firms whether attempting to focus future constructions projects on green buildings is financially worth it. Given the uncertainty of the potential positive features listed above, this is a good quantifiable method for providing evidence for or against the impact of green certification on these companies' decision making processes.
+ 
 
 ## Data and Model
 
 ## Results
 
 ## Conclusion
+
+In the future, it would be prudent to access data that distinctifies the specific rating levels for LEED and EnergyStar green certification.
 
 # What Causes What?
 
