@@ -11,7 +11,7 @@ knitr::opts_knit$set(root.dir = 'D:/Documents/MA Econ/Spring/Data Mining and Sta
 
 # Predictive Model Building
 
-```{r green_data}
+```{r green_data, include=FALSE}
 green = read.csv("./greenbuildings.csv")
 ```
 
@@ -31,8 +31,15 @@ There has been an increased focus on creating environmentally conscious building
  
  Completing these two goals will give us a tool that we can employ to predict rent prices for buildings given certain features, as well as demonstrate to commercial real estate firms whether attempting to focus future constructions projects on green buildings is financially worth it. Given the uncertainty of the potential positive features listed above, this is a good quantifiable method for providing evidence for or against the impact of green certification on these companies' decision making processes.
  
-
 ## Data and Model
+
+For this analysis, we are using using a data set of 7894 commercial rental properties in the U.S. Of these, 695 are certified as green buildings through either LEED or EnergyStar. In this data set, each green building is matched with a cluster of nearby non-green commercial buildings. Data is collected for a variety of features about the buildings, including rent in dollars per square foot, total square footage, age of building, etc. We will use these features in order to best predict building prices and quantify how much of a "Green Premium" exists. To start, we want to first look at a summary of our data to give us a reference point for future results.
+
+```{r green_summary, echo=FALSE}
+summary(green)
+```
+
+For modelling purposes, we will be utilizing bagged random forests.
 
 ## Results
 
@@ -42,9 +49,20 @@ In the future, it would be prudent to access data that distinctifies the specifi
 
 # What Causes What?
 
-## Introduction
+## 1.
+
+## 2.
+
+## 3.
+
+## 4.
+
 
 # Clustering and PCA
+
+```{r wine_data, include=FALSE}
+wine = read.csv("./wine.csv")
+```
 
 ## Introduction
 
@@ -55,6 +73,10 @@ In the future, it would be prudent to access data that distinctifies the specifi
 ## Conclusion
 
 # Market Segmentation
+
+```{r social_data, include=FALSE}
+social = read.csv("./social_marketing.csv")
+```
 
 ## Introduction
 
