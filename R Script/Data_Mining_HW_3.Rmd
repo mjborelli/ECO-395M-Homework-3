@@ -107,7 +107,7 @@ To start the stepwise selection process, we introduce a null model of rent regre
 
 ```{r simple_green_model}
 simple_green = glm(Rent ~ LEED + Energystar + Energystar*LEED, data=green)
-stargazer(simple_green)
+stargazer(simple_green, type="html")
 ```
 
 ## Conclusion

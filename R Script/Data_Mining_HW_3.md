@@ -146,42 +146,29 @@ To start the stepwise selection process, we introduce a null model of
 rent regressed onto the green building certification variables.
 
     simple_green = glm(Rent ~ LEED + Energystar + Energystar*LEED, data=green)
-    stargazer(simple_green)
+    stargazer(simple_green, type="html")
 
     ## 
-    ## % Table created by stargazer v.5.2.2 by Marek Hlavac, Harvard University. E-mail: hlavac at fas.harvard.edu
-    ## % Date and time: Fri, Apr 17, 2020 - 5:31:14 PM
-    ## \begin{table}[!htbp] \centering 
-    ##   \caption{} 
-    ##   \label{} 
-    ## \begin{tabular}{@{\extracolsep{5pt}}lc} 
-    ## \\[-1.8ex]\hline 
-    ## \hline \\[-1.8ex] 
-    ##  & \multicolumn{1}{c}{\textit{Dependent variable:}} \\ 
-    ## \cline{2-2} 
-    ## \\[-1.8ex] & Rent \\ 
-    ## \hline \\[-1.8ex] 
-    ##  LEED & 0.944 \\ 
-    ##   & (2.205) \\ 
-    ##   & \\ 
-    ##  Energystar & 1.776$^{***}$ \\ 
-    ##   & (0.626) \\ 
-    ##   & \\ 
-    ##  LEED:Energystar & 2.003 \\ 
-    ##   & (6.137) \\ 
-    ##   & \\ 
-    ##  Constant & 28.267$^{***}$ \\ 
-    ##   & (0.177) \\ 
-    ##   & \\ 
-    ## \hline \\[-1.8ex] 
-    ## Observations & 7,894 \\ 
-    ## Log Likelihood & $-$32,614.150 \\ 
-    ## Akaike Inf. Crit. & 65,236.310 \\ 
-    ## \hline 
-    ## \hline \\[-1.8ex] 
-    ## \textit{Note:}  & \multicolumn{1}{r}{$^{*}$p$<$0.1; $^{**}$p$<$0.05; $^{***}$p$<$0.01} \\ 
-    ## \end{tabular} 
-    ## \end{table}
+    ## <table style="text-align:center"><tr><td colspan="2" style="border-bottom: 1px solid black"></td></tr><tr><td style="text-align:left"></td><td><em>Dependent variable:</em></td></tr>
+    ## <tr><td></td><td colspan="1" style="border-bottom: 1px solid black"></td></tr>
+    ## <tr><td style="text-align:left"></td><td>Rent</td></tr>
+    ## <tr><td colspan="2" style="border-bottom: 1px solid black"></td></tr><tr><td style="text-align:left">LEED</td><td>0.944</td></tr>
+    ## <tr><td style="text-align:left"></td><td>(2.205)</td></tr>
+    ## <tr><td style="text-align:left"></td><td></td></tr>
+    ## <tr><td style="text-align:left">Energystar</td><td>1.776<sup>***</sup></td></tr>
+    ## <tr><td style="text-align:left"></td><td>(0.626)</td></tr>
+    ## <tr><td style="text-align:left"></td><td></td></tr>
+    ## <tr><td style="text-align:left">LEED:Energystar</td><td>2.003</td></tr>
+    ## <tr><td style="text-align:left"></td><td>(6.137)</td></tr>
+    ## <tr><td style="text-align:left"></td><td></td></tr>
+    ## <tr><td style="text-align:left">Constant</td><td>28.267<sup>***</sup></td></tr>
+    ## <tr><td style="text-align:left"></td><td>(0.177)</td></tr>
+    ## <tr><td style="text-align:left"></td><td></td></tr>
+    ## <tr><td colspan="2" style="border-bottom: 1px solid black"></td></tr><tr><td style="text-align:left">Observations</td><td>7,894</td></tr>
+    ## <tr><td style="text-align:left">Log Likelihood</td><td>-32,614.150</td></tr>
+    ## <tr><td style="text-align:left">Akaike Inf. Crit.</td><td>65,236.310</td></tr>
+    ## <tr><td colspan="2" style="border-bottom: 1px solid black"></td></tr><tr><td style="text-align:left"><em>Note:</em></td><td style="text-align:right"><sup>*</sup>p<0.1; <sup>**</sup>p<0.05; <sup>***</sup>p<0.01</td></tr>
+    ## </table>
 
 Conclusion
 ----------
