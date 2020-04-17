@@ -12,6 +12,7 @@ library(dplyr)
 library(plyr)
 library(ggplot2)
 library(randomForest)
+library(stargazer)
 ```
 
 # Predictive Model Building
@@ -69,10 +70,10 @@ These differences necessitate more formal evaluations of the data. Particularly,
 
 ## Results
 
-### Predicting Price
-```{r green_forest, echo=FALSE}
+### Random Forest Model Errors
+```{r green_forest_eval, include=FALSE}
 # Setting a seed for consistent results
-set.seed((14))
+set.seed(14)
 
 # Establish Train/Test split
 N = nrow(green)
@@ -83,26 +84,31 @@ train_ind = sample.int(N, N_train, replace=FALSE) %>% sort
 green_train = green[train_ind,]
 green_test = green[-train_ind,]
 
-# Setting up to evaluate which number of trees provides best improvement of RMSE
-RMSE_eval = data.frame(N_Trees = integer(), Mean_RMSE = numeric())
-for (i in 1:10){
-        cumul_RMSE = 0
-        for(j in 1:5) {
-                        forest1 = randomForest(Rent ~ size + leasing_rate + stories + age + renovated + class_a + class_b + LEED + Energystar + net + amenities + total_dd_07 + Precipitation + Gas_Costs + Electricity_Costs, mtry=1, nTree=1, data=green_train)
-                        yhat_forest_test = predict(forest1, green_test)
-                        rmse_forest = mean((green_test$Rent - yhat_forest_test)^2) %>% sqrt
-                        cumul_RMSE = cumul_RMSE + rmse_forest
-        }
-        RMSE_eval[i, 1] = i*10
-        RMSE_eval[i, 2] = cumul_RMSE/5
-}
-ggplot(data = RMSE_eval, aes(x = N_Trees, y = Mean_RMSE)) +
-        geom_bar(stat='identity')
-
+# Random Forest
+forest_green = randomForest(Rent ~ size + leasing_rate + stories + age + renovated + class_a + class_b + LEED + Energystar + LEED*Energystar + net + amenities + total_dd_07 + Precipitation + Gas_Costs + Electricity_Costs, mtry=1, nTree=100, data=green_train)
+plot(forest_green)
 
 ```
+The model errors are high at low amounts of trees, flattening out at around 100 trees, so we will use 100 trees in our random forest model.
 
-###
+### Variable Importance Plot
+
+Random Forests, as well as other large tree regression methods, are generally not interpretable. However, we can create measures of variable importance to help understand which feature variables by looking at which variables best improve error within the aggregated trees. Below is a variable importance plot, ranked in order of importance.
+
+```{r, importance}
+varImpPlot(forest_green)
+```
+
+The most important variables are closely related since electricity costs, total days of heating or cooling required, precipitation amounts, and gas costs are all related to the running costs of a building. Interestingly, the least important variables are the green certification dummy variables, with EnergyStar being slightly more important than LEED. This is evidence that having certification as a green building doesn't have a large impact on rental rates, but to be sure we will now check using stepwise regression model selection.
+
+### Green Premium
+
+To start the stepwise selection process, we introduce a null model of rent regressed onto the green building certification variables.
+
+```{r simple_green_model}
+simple_green = glm(Rent ~ LEED + Energystar + Energystar*LEED, data=green)
+stargazer(simple_green)
+```
 
 ## Conclusion
 
