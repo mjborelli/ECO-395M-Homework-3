@@ -5,8 +5,10 @@ date: "4/14/2020"
 output: md_document
 ---
 
-```{r setup}
+```{r setup, include=FALSE}
 knitr::opts_knit$set(root.dir = 'D:/Documents/MA Econ/Spring/Data Mining and Statistical Learning/ECO-395M-Homework-3/data')
+library(plyr)
+library(ggplot2)
 ```
 
 # Predictive Model Building
@@ -33,10 +35,18 @@ There has been an increased focus on creating environmentally conscious building
  
 ## Data and Model
 
-For this analysis, we are using using a data set of 7894 commercial rental properties in the U.S. Of these, 695 are certified as green buildings through either LEED or EnergyStar. In this data set, each green building is matched with a cluster of nearby non-green commercial buildings. Data is collected for a variety of features about the buildings, including rent in dollars per square foot, total square footage, age of building, etc. We will use these features in order to best predict building prices and quantify how much of a "Green Premium" exists. To start, we want to first look at a summary of our data to give us a reference point for future results.
+For this analysis, we are using using a data set of 7894 commercial rental properties in the U.S. Of these, 695 are certified as green buildings through either LEED or EnergyStar. In this data set, each green building is matched with a cluster of nearby non-green commercial buildings. Data is collected for a variety of features about the buildings, including rent in dollars per square foot, total square footage, age of building, etc. We will use these features in order to best predict building prices and quantify how much of a "Green Premium" exists. To start, we want to first look at a summary of the differences between  to give us a reference point for future results.
 
 ```{r green_summary, echo=FALSE}
-summary(green)
+summary_green = ddply(green, c("LEED", "Energystar"), summarise,
+                      N = length(Rent),
+                      "Rent" = mean(Rent),
+                      "Leasing Rate" = mean(leasing_rate),
+                      "Age" = mean(age),
+                      "Class A" = round(mean(class_a)*100, 2),
+                      "Class B" = round(mean(class_b)*100, 2),
+                      "Temp Control Days" = mean(total_dd_07))
+summary_green
 ```
 
 For modelling purposes, we will be utilizing bagged random forests.
