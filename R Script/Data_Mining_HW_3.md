@@ -114,11 +114,74 @@ performance.
 Results
 -------
 
-### Predicting Price
+### Random Forest Model Errors
 
-![](Data_Mining_HW_3_files/figure-markdown_strict/green_forest-1.png)
+The model errors are high at low amounts of trees, flattening out at
+around 100 trees, so we will use 100 trees in our random forest model.
 
-### 
+### Variable Importance Plot
+
+Random Forests, as well as other large tree regression methods, are
+generally not interpretable. However, we can create measures of variable
+importance to help understand which feature variables by looking at
+which variables best improve error within the aggregated trees. Below is
+a variable importance plot, ranked in order of importance.
+
+    varImpPlot(forest_green)
+
+![](Data_Mining_HW_3_files/figure-markdown_strict/importance-1.png)
+
+The most important variables are closely related since electricity
+costs, total days of heating or cooling required, precipitation amounts,
+and gas costs are all related to the running costs of a building.
+Interestingly, the least important variables are the green certification
+dummy variables, with EnergyStar being slightly more important than
+LEED. This is evidence that having certification as a green building
+doesn’t have a large impact on rental rates, but to be sure we will now
+check using stepwise regression model selection.
+
+### Green Premium
+
+To start the stepwise selection process, we introduce a null model of
+rent regressed onto the green building certification variables.
+
+    simple_green = glm(Rent ~ LEED + Energystar + Energystar*LEED, data=green)
+    stargazer(simple_green)
+
+    ## 
+    ## % Table created by stargazer v.5.2.2 by Marek Hlavac, Harvard University. E-mail: hlavac at fas.harvard.edu
+    ## % Date and time: Fri, Apr 17, 2020 - 5:31:14 PM
+    ## \begin{table}[!htbp] \centering 
+    ##   \caption{} 
+    ##   \label{} 
+    ## \begin{tabular}{@{\extracolsep{5pt}}lc} 
+    ## \\[-1.8ex]\hline 
+    ## \hline \\[-1.8ex] 
+    ##  & \multicolumn{1}{c}{\textit{Dependent variable:}} \\ 
+    ## \cline{2-2} 
+    ## \\[-1.8ex] & Rent \\ 
+    ## \hline \\[-1.8ex] 
+    ##  LEED & 0.944 \\ 
+    ##   & (2.205) \\ 
+    ##   & \\ 
+    ##  Energystar & 1.776$^{***}$ \\ 
+    ##   & (0.626) \\ 
+    ##   & \\ 
+    ##  LEED:Energystar & 2.003 \\ 
+    ##   & (6.137) \\ 
+    ##   & \\ 
+    ##  Constant & 28.267$^{***}$ \\ 
+    ##   & (0.177) \\ 
+    ##   & \\ 
+    ## \hline \\[-1.8ex] 
+    ## Observations & 7,894 \\ 
+    ## Log Likelihood & $-$32,614.150 \\ 
+    ## Akaike Inf. Crit. & 65,236.310 \\ 
+    ## \hline 
+    ## \hline \\[-1.8ex] 
+    ## \textit{Note:}  & \multicolumn{1}{r}{$^{*}$p$<$0.1; $^{**}$p$<$0.05; $^{***}$p$<$0.01} \\ 
+    ## \end{tabular} 
+    ## \end{table}
 
 Conclusion
 ----------
