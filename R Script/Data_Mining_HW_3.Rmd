@@ -62,16 +62,15 @@ summary_green_3
 
 There are a lot of observations to make from these summary tables. A simple glance at the rent column shows that rent appears to be higher in green certified buildings than in non-green certified buildings. However, there also seems to be a big difference in the rental rate between EnergyStar certified buildings and LEED certified buildings, `r (summary_green_1[2,4] - summary_green_1[3,4])`$ per square foot. Looking closer at these tables, there are large differences in feature variables amongst the different populations of building types. The starkest difference is in days of temperature control, defined as the number of days where the building needs heating or cooling. EnergyStar buildings need `r (summary_green_2[1,3] - summary_green_2[2,3])` days fewer of heating or cooling than buildings with no green certification, but LEED buildings actually need `r (summary_green_2[3,3] - summary_green_2[1,3])` days more. 
 
-These differences necessitate more formal evaluations of the data. Particularly, we will evaluate the effect of certification separately for LEED and EnergyStar, as buildings that meet their respective certifications seem to have different standards. To predict building rent prices as well as quantify effect of LEED and EnergyStar certification on rent prices, we will utilize regression variable selection methods.  First, we split the data into training and testing sets, then perform variable selection. To check robustness, we will compare the following models for error improvement:
-$$ Rent_i = \beta_0 + \beta_1LEED_i + \beta_2EnergyStar_i + \beta_3LEED_i*EnergyStar_i + e_i $$
-$$ Rent_i = \beta_0 + \beta X_i + e_i $$
+These differences necessitate more formal evaluations of the data. Particularly, we will evaluate the effect of certification separately for LEED and EnergyStar, as buildings that meet their respective certifications seem to have different standards. To predict building rent prices  we will utilize random forest regression  First, we split the data into training and testing data, then use random forests to pick the model with the lowest error. For robustness, we will test the error for different numbers of trees in the random forest. However, we can't use random forests to quantify the effect of green certification on rent prices, as large tree and forests are generally not interpretable in the way we want. Therefore, we will utilizeTo check robustness, we will compare the simple model of rent regressed onto green certification with the model identified through our selection process on out-of-sample performance.
+
 
 ## Results
 
 ### Predicting Price
-
 ```{r green_forest, echo=FALSE}
 library(dplyr)
+# Establish Train/Test split
 N = nrow(green)
 train_frac = 0.8
 N_train = floor(train_frac*N)
@@ -80,10 +79,24 @@ train_ind = sample.int(N, N_train, replace=FALSE) %>% sort
 green_train = green[train_ind,]
 green_test = green[-train_ind,]
 
-
-
+# Setting up to evaluate which number of trees provides best improvement of RMSE
+RMSE_eval = data.frame(N_Trees = integer(), Mean_RMSE = numeric())
+for (i in 1:5){
+        cumul_RMSE = 0
+        for(j in 1:10) {
+                        forest1 = randomForest(Rent ~ size + leasing_rate + stories + age + renovated + class_a + class_b + LEED + Energystar + net + amenities + total_dd_07 + Precipitation + Gas_Costs + Electricity_Costs, mtry=1, nTree=i*50, data=green_train)
+                        yhat_forest_test = predict(forest1, green_test)
+                        rmse_forest = mean((green_test$Rent - yhat_forest_test)^2) %>% sqrt
+                        cumul_RMSE = cumul_RMSE + rmse_forest
+        }
+        RMSE_eval[i, 1] = i*50
+        RMSE_eval[i, 2] = cumul_RMSE/10
+}
+RMSE_eval
 
 ```
+
+###
 
 ## Conclusion
 
