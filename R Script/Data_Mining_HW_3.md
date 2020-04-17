@@ -100,38 +100,25 @@ These differences necessitate more formal evaluations of the data.
 Particularly, we will evaluate the effect of certification separately
 for LEED and EnergyStar, as buildings that meet their respective
 certifications seem to have different standards. To predict building
-rent prices as well as quantify effect of LEED and EnergyStar
-certification on rent prices, we will utilize regression variable
-selection methods. First, we split the data into training and testing
-sets, then perform variable selection. To check robustness, we will
-compare the following models for error improvement:
-*R**e**n**t*<sub>*i*</sub> = *β*<sub>0</sub> + *β*<sub>1</sub>*L**E**E**D*<sub>*i*</sub> + *β*<sub>2</sub>*E**n**e**r**g**y**S**t**a**r*<sub>*i*</sub> + *β*<sub>3</sub>*L**E**E**D*<sub>*i*</sub> \* *E**n**e**r**g**y**S**t**a**r*<sub>*i*</sub> + *e*<sub>*i*</sub>
-*R**e**n**t*<sub>*i*</sub> = *β*<sub>0</sub> + *β**X*<sub>*i*</sub> + *e*<sub>*i*</sub>
+rent prices we will utilize random forest regression First, we split the
+data into training and testing data, then use random forests to pick the
+model with the lowest error. For robustness, we will test the error for
+different numbers of trees in the random forest. However, we can’t use
+random forests to quantify the effect of green certification on rent
+prices, as large tree and forests are generally not interpretable in the
+way we want. Therefore, we will utilizeTo check robustness, we will
+compare the simple model of rent regressed onto green certification with
+the model identified through our selection process on out-of-sample
+performance.
 
 Results
 -------
 
 ### Predicting Price
 
-    ## 
-    ## Attaching package: 'dplyr'
+![](Data_Mining_HW_3_files/figure-markdown_strict/green_forest-1.png)
 
-    ## The following object is masked from 'package:randomForest':
-    ## 
-    ##     combine
-
-    ## The following objects are masked from 'package:plyr':
-    ## 
-    ##     arrange, count, desc, failwith, id, mutate, rename, summarise,
-    ##     summarize
-
-    ## The following objects are masked from 'package:stats':
-    ## 
-    ##     filter, lag
-
-    ## The following objects are masked from 'package:base':
-    ## 
-    ##     intersect, setdiff, setequal, union
+### 
 
 Conclusion
 ----------

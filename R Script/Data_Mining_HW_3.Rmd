@@ -7,6 +7,8 @@ output: md_document
 
 ```{r setup, include=FALSE}
 knitr::opts_knit$set(root.dir = 'D:/Documents/MA Econ/Spring/Data Mining and Statistical Learning/ECO-395M-Homework-3/data')
+
+library(dplyr)
 library(plyr)
 library(ggplot2)
 library(randomForest)
@@ -69,7 +71,9 @@ These differences necessitate more formal evaluations of the data. Particularly,
 
 ### Predicting Price
 ```{r green_forest, echo=FALSE}
-library(dplyr)
+# Setting a seed for consistent results
+set.seed((14))
+
 # Establish Train/Test split
 N = nrow(green)
 train_frac = 0.8
@@ -81,18 +85,20 @@ green_test = green[-train_ind,]
 
 # Setting up to evaluate which number of trees provides best improvement of RMSE
 RMSE_eval = data.frame(N_Trees = integer(), Mean_RMSE = numeric())
-for (i in 1:5){
+for (i in 1:10){
         cumul_RMSE = 0
-        for(j in 1:10) {
-                        forest1 = randomForest(Rent ~ size + leasing_rate + stories + age + renovated + class_a + class_b + LEED + Energystar + net + amenities + total_dd_07 + Precipitation + Gas_Costs + Electricity_Costs, mtry=1, nTree=i*50, data=green_train)
+        for(j in 1:5) {
+                        forest1 = randomForest(Rent ~ size + leasing_rate + stories + age + renovated + class_a + class_b + LEED + Energystar + net + amenities + total_dd_07 + Precipitation + Gas_Costs + Electricity_Costs, mtry=1, nTree=1, data=green_train)
                         yhat_forest_test = predict(forest1, green_test)
                         rmse_forest = mean((green_test$Rent - yhat_forest_test)^2) %>% sqrt
                         cumul_RMSE = cumul_RMSE + rmse_forest
         }
-        RMSE_eval[i, 1] = i*50
-        RMSE_eval[i, 2] = cumul_RMSE/10
+        RMSE_eval[i, 1] = i*10
+        RMSE_eval[i, 2] = cumul_RMSE/5
 }
-RMSE_eval
+ggplot(data = RMSE_eval, aes(x = N_Trees, y = Mean_RMSE)) +
+        geom_bar(stat='identity')
+
 
 ```
 
