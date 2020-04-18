@@ -65,8 +65,49 @@ summary_green_3
 
 There are a lot of observations to make from these summary tables. A simple glance at the rent column shows that rent appears to be higher in green certified buildings than in non-green certified buildings. However, there also seems to be a big difference in the rental rate between EnergyStar certified buildings and LEED certified buildings, `r (summary_green_1[2,4] - summary_green_1[3,4])`$ per square foot. Looking closer at these tables, there are large differences in feature variables amongst the different populations of building types. The starkest difference is in days of temperature control, defined as the number of days where the building needs heating or cooling. EnergyStar buildings need `r (summary_green_2[1,3] - summary_green_2[2,3])` days fewer of heating or cooling than buildings with no green certification, but LEED buildings actually need `r (summary_green_2[3,3] - summary_green_2[1,3])` days more. 
 
-These differences necessitate more formal evaluations of the data. Particularly, we will evaluate the effect of certification separately for LEED and EnergyStar, as buildings that meet their respective certifications seem to have different standards. To predict building rent prices  we will utilize random forest regression  First, we split the data into training and testing data, then use random forests to pick the model with the lowest error. For robustness, we will test the error for different numbers of trees in the random forest. However, we can't use random forests to quantify the effect of green certification on rent prices, as large tree and forests are generally not interpretable in the way we want. Therefore, we will utilizeTo check robustness, we will compare the simple model of rent regressed onto green certification with the model identified through our selection process on out-of-sample performance.
+These differences necessitate more formal evaluations of the data. Particularly, we will evaluate the effect of certification separately for LEED and EnergyStar, as buildings that meet their respective certifications seem to have different standards. To predict building rent prices  we will utilize random forest regression  First, we split the data into training and testing data, then use random forests to pick the model with the lowest error. For robustness, we will test the error for different numbers of trees in the random forest. However, we can't use random forests to quantify the effect of green certification on rent prices, as large tree and forests are generally not interpretable in the way we want. Therefore, we will utilize regression model selection techniques to best estimate rent. To check robustness, we will compare the simple model of rent regressed onto green certification with the model identified through our selection process on out-of-sample performance. Lastly, we will be controlling rent by cluster, by normalizing rent values using the clustered rent values.
 
+```{r normalize rent, include = FALSE}
+# The following two comments I wrote at the start of this process, keeping them here for posterity
+# If this works, I'll be particularly proud of this
+# Trying to normalize the rent variable by cluster, as cluster rents are highly correlated with raw rent values and potentially biasing the results
+
+# The following doesn't work without this adhoc
+green$cluster_se = 1
+green$norm_rent = 1
+
+# Part 1: This segment takes the subset from the greenbuildings data set for each cluster and calculates the standard error of rent for that cluster
+cluster_se = data.frame("Cluster" = as.integer(), "SD" = as.numeric())
+for (i in unique(green$cluster)) {
+        x = subset(green, cluster == i)
+        cluster_se [i, 1] = i
+        cluster_se [i, 2] = sd(x$Rent)
+}
+
+# Part 2: This segment iteratively applies the cluster's standard error back into the original data set. Probably an inneficient way of doing this, would like to know how to do this better.
+for (j in unique(green$cluster)) {
+        for (i in 1:7894) {
+                if (green[i,2] == cluster_se[j, 1]) {
+                        green[i, 24] = cluster_se[j, 2]
+                }
+        }
+}
+
+# Part 3: Create a normalized rent value (the easy part!!)
+green$norm_rent = (green$Rent - green$cluster_rent) / green$cluster_se
+
+# Issue: 4 missing values, will manually fix them
+# first, identify which observations have missing values
+for (i in 1:7894) {
+    if(is.na(green[i, 25]) == "TRUE") {
+        print(i)
+    }
+}
+
+# Through data exploration,there are missing values for normalized rent. These values consist of buildings that are the only listed building in their cluster, or buildings in a cluster where all buildings share the same rent value. Since I'm now using cluster-standardized errors, I have to drop these observations
+
+green = green[-c(817, 1016, 1017, 1234, 1235, 1968, 2155, 2867, 2868, 3009, 3010, 3011, 3012, 3013, 3014, 3898, 3899, 5202, 5219, 5220, 5357, 5358, 5654, 5655, 5656, 5684, 5685, 6680, 6681, 6682, 6683, 6684, 6685, 6686, 6687, 6688, 6689, 6690, 6691, 6932, 7453, 7454),]
+```
 
 ## Results
 
@@ -87,7 +128,6 @@ green_test = green[-train_ind,]
 # Random Forest
 forest_green = randomForest(Rent ~ size + leasing_rate + stories + age + renovated + class_a + class_b + LEED + Energystar + LEED*Energystar + net + amenities + total_dd_07 + Precipitation + Gas_Costs + Electricity_Costs, mtry=1, nTree=100, data=green_train)
 plot(forest_green)
-
 ```
 The model errors are high at low amounts of trees, flattening out at around 100 trees, so we will use 100 trees in our random forest model.
 
@@ -99,45 +139,55 @@ Random Forests, as well as other large tree regression methods, are generally no
 varImpPlot(forest_green)
 ```
 
-The most important variables are closely related since electricity costs, total days of heating or cooling required, precipitation amounts, and gas costs are all related to the running costs of a building. Interestingly, the least important variables are the green certification dummy variables, with EnergyStar being slightly more important than LEED. This is evidence that having certification as a green building doesn't have a large impact on rental rates, but to be sure we will now check using stepwise regression model selection.
+Some of the most important variables are closely related since electricity costs, total days of heating or cooling required, precipitation amounts, and gas costs are all related to the running costs of a building. Interestingly, some of the least important variables are the green certification dummy variables, with EnergyStar being slightly more important than LEED. This is potentially evidence that having certification as a green building doesn't have a large impact on rental rates, but to be sure we will now check using stepwise regression model selection.
 
 ### Green Premium
 
 To start the stepwise selection process, we introduce a null model of rent regressed onto the green building certification variables.
 
-```{r simple_green_model}
-simple_green = glm(Rent ~ LEED + Energystar + Energystar*LEED, data=green)
+```{r simple_green_model, echo = FALSE}
+simple_green = glm(norm_rent ~ LEED + Energystar + Energystar*LEED, data=green)
 stargazer(simple_green, type="text")
 ```
 
-In this regression, we get positive coefficients for each of the green certification variables, but only EnergyStar certification's effect is statistically significant. LEED does not have any significantly positive effect on rent in our simple model. To compare, the following is the model picked by stepwise selection using AIC as the loss function.
+FIX THIS MATT In this regression, we get positive coefficients for each of the green certification variables, but only EnergyStar certification's effect is statistically significant. LEED does not have any significantly positive effect on rent in our simple model. To compare, the following is the model picked by stepwise selection using AIC as the loss function.
 
-```{r green_step, echo=FALSE}
+```{r green_step, include=FALSE}
 green_step = step(simple_green, 
-			scope=~(. + size + leasing_rate + stories + age + renovated + class_a + class_b + net + amenities + total_dd_07 + Precipitation + Gas_Costs + Electricity_Costs)^2)
-
-library(finalfit)
-explanatory = c("LEED", "Energystar", "green_rating")
-dependent = 'Rent'
-green %>%
-  finalfit(dependent, explanatory)
-
-
+			scope=~(. +size + leasing_rate + stories + age + renovated + class_a + class_b  + net + amenities + total_dd_07 + Precipitation + Gas_Costs + Electricity_Costs))
 ```
+
+```{r green_final_model}
+final_green = glm(norm_rent ~ LEED + Energystar + class_a + size + class_b + Gas_Costs + 
+    net + age + leasing_rate + amenities, data = green)
+
+stargazer(final_green, type="text")
+```
+
+In our final regression, we get positive significant values for LEED and Energystar certification on our normalized rents. This means that LEED certification is associated with a 0.352 standard deviation increase in rent above the local cluster's average rent and that Energystar certification is associated with a 0.179 standard deviation increase in rent above the local cluster's average rent.
 
 ## Conclusion
 
-In the future, it would be prudent to access data that distinctifies the specific rating levels for LEED and EnergyStar green certification.
+With the two models described above, we have created two models: a random forest for predicting price, the other a regression selection model quantifying the average change in rental income per square foot above average. 
+
+In the random forest model, the most important variables are feature variables related to running costs, such as electricity costs, gas costs, and total days of heating or cooling needed. Relatively less important in our predictions are green certification (LEED and EnergyStar), amenities, and utility pay structure (the variable "net"). Of course, these less important variables are binary variables, which means it's less likely for them to reduce loss in these models anyways. Overall, it seems that rent prices are generally related to the running costs of a building, and less so on specific features of the commercial buildings.
+
+Our regression selection method produced a model that regressed the cluster-normalized rent prices on a variety of feature variables, including LEED and EnergyStar certification. We took the cluster-normalized rents in this model in order to control for more expensive areas while avoiding multicollinearity issues that would arise from simply including clusterd rents in the regression model. Our results show that LEED and EnergyStar green certification are associated with increases in cluster-normalized rent prices, holding all else constant. This means that there is a "Green Premium" where buildings with green certifications have higher rents than those that don't, even if they have the same features. For future research, it would be prudent to access data that distinctifies the specific rating levels for LEED and EnergyStar green certification. Regression discontinuity methods could then be utilized to determine if there is just a sharp increase in rent prices, or if there is also a fuzzy increase after achieving certification that continues to increase rents. If there is simply a sharp increase, then the rent increase that we see isn't necessarily tied to the score given to a building, but just the actual distiction between being certified and not being certified.
 
 # What Causes What?
 
-## 1.
+##  Question 1.
+#### Why can’t I just get data from a few different cities and run the regression of “Crime” on “Police” to understand how more cops in the streets affect crime? (“Crime” refers to some measure of crime rate and “Police” measures the number of cops in a city.)
 
-## 2.
+You can't just run a regression of "amount of crime" on "amount of police" because cities with high rates of crime have a clear incentive to have more police officers. Since the amount of police officers is usually based on the amount of crime, running OLS of "Crime" on "Police" would get a positive coefficient, meaning that more police are associated with more crime. This might literally be true, but not the causal relationship we actually want to address
 
-## 3.
+## Question 2.
 
-## 4.
+The UPenn researchers found that 
+
+## Question 3.
+
+## Question 4.
 
 
 # Clustering and PCA
