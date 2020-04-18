@@ -107,7 +107,22 @@ To start the stepwise selection process, we introduce a null model of rent regre
 
 ```{r simple_green_model}
 simple_green = glm(Rent ~ LEED + Energystar + Energystar*LEED, data=green)
-stargazer(simple_green, type="html")
+stargazer(simple_green, type="text")
+```
+
+In this regression, we get positive coefficients for each of the green certification variables, but only EnergyStar certification's effect is statistically significant. LEED does not have any significantly positive effect on rent in our simple model. To compare, the following is the model picked by stepwise selection using AIC as the loss function.
+
+```{r green_step, echo=FALSE}
+green_step = step(simple_green, 
+			scope=~(. + size + leasing_rate + stories + age + renovated + class_a + class_b + net + amenities + total_dd_07 + Precipitation + Gas_Costs + Electricity_Costs)^2)
+
+library(finalfit)
+explanatory = c("LEED", "Energystar", "green_rating")
+dependent = 'Rent'
+green %>%
+  finalfit(dependent, explanatory)
+
+green_step_best
 ```
 
 ## Conclusion
