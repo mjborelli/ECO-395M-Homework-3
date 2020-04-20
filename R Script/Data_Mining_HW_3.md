@@ -279,7 +279,7 @@ What Causes What?
 Question 1
 ----------
 
-#### Why can’t I just get data from a few different cities and run the regression of “Crime” on “Police” to understand how more cops in the streets affect crime? (“Crime” refers to some measure of crime rate and “Police” measures the number of cops in a city.)
+#### Why can’ I just get data from a few different cities and run the regression of “Crime” on “Police” to understand how more cops in the streets affect crime? (“Crime” refers to some measure of crime rate and “Police” measures the number of cops in a city.)
 
 You can’t just run a regression of “amount of crime” on “amount of
 police” because cities with high rates of crime have a clear incentive
@@ -595,20 +595,6 @@ mean users in that cluster have post frequencies in those categories
 that are above the sample average. We will use these higher-than-average
 post category frequencies to determine characteristics of the group.
 
-    # Originally wasn't going to, but we need to scale the data to get better intuitions into what these clusters represent
-    set.seed(14)
-    social_freq_scaled = scale(social_freq, center=TRUE, scale=TRUE)
-
-    clust6_social = kmeanspp(social_freq_scaled, k = 6, nstart = 25)
-
-    Social_Cluster_1 = clust6_social$center[1,]
-    Social_Cluster_2 = clust6_social$center[2,]
-    Social_Cluster_3 = clust6_social$center[3,]
-    Social_Cluster_4 = clust6_social$center[4,]
-    Social_Cluster_5 = clust6_social$center[5,]
-    Social_cluster_6 = clust6_social$center[6,]
-    social_obs = nrow(social_freq_scaled)
-
 ### Cluster 1 - Beauty / Lifestyle
 
     ##          chatter   current_events           travel    photo_sharing 
@@ -630,13 +616,13 @@ post category frequencies to determine characteristics of the group.
     ##          fashion   small_business 
     ##      -0.17740345      -0.07315778
 
-There are 1124 in this cluster, or approximately 14.4 of our sample.
-Accounts in this sample have relative high amounts of cooking, fashion,
-and beauty content compared to the rest of the sample. This signifies a
-focus on beauty and lifestyle, potentially having crossover influence
-with Instagram as well. For accounts in this cluster, advertisements or
-partnerships that focus on the health benefits of NutrientH20 would be
-the best strategy.
+There are 1124 accounts in this cluster, or approximately 14.4% of our
+sample. Accounts in this sample have relative high amounts of cooking,
+fashion, and beauty content compared to the rest of the sample. This
+signifies a focus on beauty and lifestyle, potentially having crossover
+influence with Instagram as well. For accounts in this cluster,
+advertisements or partnerships that focus on the health benefits of
+NutrientH20 would be the best strategy.
 
 ### Cluster 2 - Working Professionals
 
@@ -659,21 +645,10 @@ the best strategy.
     ##          fashion   small_business 
     ##      -0.26406308      -0.17882083
 
-There are 1370 in this cluster, or approximately -5.575205710^{-5},
--2.688046510^{-5}, -3.443988810^{-5}, -5.246378710^{-5},
--1.474906210^{-5}, -3.145621710^{-5}, -4.4611710^{-5},
--4.255617210^{-5}, 1.648351310^{-5}, -3.266661210^{-5},
--1.195842210^{-5}, -1.796579210^{-5}, -2.44430810^{-5},
--2.723317310^{-5}, -3.708525810^{-5}, 2.248120210^{-4},
--4.250560210^{-5}, -2.050042510^{-5}, 2.649004510^{-5},
-1.519844210^{-5}, -2.388551810^{-5}, -1.953297310^{-5}, 1.39599910^{-4},
--1.545018510^{-5}, -3.572954310^{-5}, -1.515391510^{-5},
--3.756952610^{-5}, -3.682929110^{-5}, -3.419987110^{-5},
-2.443994910^{-6}, -3.792078510^{-5}, 2.085533810^{-4},
--3.382388610^{-5}, -2.290519210^{-5} of our sample. Accounts in this
-cluster have higher than average frequencise of news, politics,
-automotive, computers, and travel content. This is a bit of a broader
-category of people in various working professions, with a
+There are 1370 accoutns in this cluster, or approximately 17.55% of our
+sample. Accounts in this cluster have higher than average frequencise of
+news, politics, automotive, computers, and travel content. This is a bit
+of a broader category of people in various working professions, with a
 cross-sectional interest in news and politics. Since these people are
 generally using their twitter accounts for their work interests,
 advertising to these accounts should focus on how NutrientH20 products
@@ -700,26 +675,16 @@ can improve work performance and focus.
     ##          fashion   small_business 
     ##       1.99441344      -0.05777160
 
-There are 817 in this cluster, or approximately -5.889088310^{-5},
--2.422146310^{-5}, -3.151210610^{-5}, 5.52877410^{-5}, 1.888631710^{-6},
--3.426565410^{-5}, -5.157547110^{-5}, -4.676228910^{-5},
--5.368738510^{-5}, -3.048528610^{-5}, -1.458200510^{-5},
-1.507165210^{-5}, -3.672777210^{-5}, -2.548612910^{-5},
--2.393648310^{-5}, -3.907049210^{-5}, -2.998391410^{-5},
--9.036343510^{-6}, 2.788526410^{-4}, -2.544007310^{-5},
--2.038427310^{-5}, -4.541623510^{-6}, -2.278406510^{-5},
--2.199044110^{-5}, -2.685908210^{-5}, -1.145678810^{-5},
--3.87999810^{-5}, 2.26156810^{-4}, -3.596015110^{-5}, -1.541295310^{-5},
--1.154524810^{-5}, -4.03830910^{-5}, 2.554647710^{-4}, -7.399974610^{-6}
-of our sample. This cluster is centered around people who post more
-about food, sports, school, religion, family, and parenting. We would
-likely identify this cluster as parents considering the
-higher-than-average frequencies of school, family, and parenting.
-Marketing for these groups could invoke the health benefits of
-NutrientH20 products for children, since parents would but for
-themselves and for their children. As well, since this category contains
-people who post a lot of sports content, endorsements from sports
-celebrities could be influential for this cluster.
+There are 817 accounts in this cluster, or approximately 10.46% of our
+sample. This cluster is centered around people who post more about food,
+sports, school, religion, family, and parenting. We would likely
+identify this cluster as parents considering the higher-than-average
+frequencies of school, family, and parenting. Marketing for these groups
+could invoke the health benefits of NutrientH20 products for children,
+since parents would but for themselves and for their children. As well,
+since this category contains people who post a lot of sports content,
+endorsements from sports celebrities could be influential for this
+cluster.
 
 ### Cluster 4 - General
 
@@ -742,24 +707,14 @@ celebrities could be influential for this cluster.
     ##          fashion   small_business 
     ##      -0.34071706      -0.05216397
 
-There are 1176 in this cluster, or approximately -4.751696910^{-5},
--1.369534310^{-5}, 1.240159510^{-4}, -6.129494810^{-5},
--1.874993110^{-5}, -1.125828810^{-5}, 1.500734910^{-5},
-2.186176710^{-4}, -2.925692710^{-5}, -1.123106410^{-5},
--7.07171810^{-6}, -2.208714910^{-5}, 1.939970610^{-4},
--3.162040310^{-5}, -4.730439210^{-5}, -5.165739310^{-5},
--3.448270610^{-5}, -2.10232110^{-5}, -5.12038110^{-5}, -2.05723710^{-5},
-9.922340410^{-5}, -1.867142810^{-6}, -1.795310910^{-6},
--1.774697810^{-5}, 1.129283110^{-4}, -2.366542410^{-5},
--2.936293810^{-5}, -3.663463510^{-5}, -1.341687210^{-5},
--3.19965710^{-6}, -2.589269310^{-5}, -5.011926310^{-5},
--4.364250710^{-5}, -6.681691510^{-6} of our sample. This is the largest
-cluster in our sample and is defined by the lack of strong interests.
-With the most frequent categories being chatter and photo sharing,
-accounts in this cluster don’t have the same defined interests that
-other clusters exhibit. Because of this, we would recommend to save
-money by not use targeted advertising for these groups and instead
-relying on your general advertising campaigns to reach these accounts.
+There are 1176 accounts in this cluster, or approximately 15.06% of our
+sample. This is the largest cluster in our sample and is defined by the
+lack of strong interests. With the most frequent categories being
+chatter and photo sharing, accounts in this cluster don’t have the same
+defined interests that other clusters exhibit. Because of this, we would
+recommend to save money by not use targeted advertising for these groups
+and instead relying on your general advertising campaigns to reach these
+accounts.
 
 ### Cluster 5 - University Students / Gamers
 
@@ -782,28 +737,17 @@ relying on your general advertising campaigns to reach these accounts.
     ##          fashion   small_business 
     ##      -0.18719829       0.16582999
 
-There are 2615 in this cluster, or approximately 1.064025710^{-4},
-4.401784510^{-5}, -6.072812610^{-6}, 7.261932210^{-5}, 2.939227410^{-5},
-3.619810610^{-5}, -3.371673210^{-5}, -2.824706910^{-5},
--3.930511210^{-5}, -1.017455310^{-5}, 2.169723910^{-5},
-1.648504610^{-5}, -3.756004110^{-5}, -3.162768610^{-5},
-7.811822110^{-5}, -5.020735110^{-5}, -2.059576410^{-5},
--9.793035310^{-6}, -4.675536410^{-5}, 1.800220910^{-5},
--1.350537610^{-5}, 2.251162610^{-5}, -4.257496210^{-5},
-1.600886510^{-5}, -1.227997610^{-5}, 2.560403310^{-5},
--3.857913710^{-5}, -2.8609910^{-5}, -3.900812910^{-5}, 1.810933210^{-5},
--9.284375310^{-6}, -4.402838210^{-5}, -2.397826210^{-5},
-2.124119310^{-5} of our sample. Accounts in this cluster tend to exhibit
-higher than average post frequencies for online gaming, college, and
-playing sports. In this instance, the sports category could be partially
-referring to eSports, a competitive form of online gaming. Either way,
-accounts in this cluster appear to consist mostly of college-aged people
-who either game or play sports. It is likely that the people in this
-cluster would be interested in drinks that improve mental focus without
-causing burnout, which college students are prone to. Advertising
-directly to those two needs would help to improve sales, while looking
-at sponsoring eSports competitions or leagues could increase your
-customer base.
+There are 2615 accounts in this cluster, or approximately 14.4% of our
+sample. Accounts in this cluster tend to exhibit higher than average
+post frequencies for online gaming, college, and playing sports. In this
+instance, the sports category could be partially referring to eSports, a
+competitive form of online gaming. Either way, accounts in this cluster
+appear to consist mostly of college-aged people who either game or play
+sports. It is likely that the people in this cluster would be interested
+in drinks that improve mental focus without causing burnout, which
+college students are prone to. Advertising directly to those two needs
+would help to improve sales, while looking at sponsoring eSports
+competitions or leagues could increase your customer base.
 
 Cluster 6 - Physical Fitness
 
@@ -826,21 +770,10 @@ Cluster 6 - Physical Fitness
     ##          fashion   small_business 
     ##     -0.252568935      0.002996711
 
-There are 705 in this cluster, or approximately -4.958504810^{-5},
--2.692311510^{-5}, -2.273187810^{-5}, -4.30566810^{-5},
--8.599290310^{-6}, 2.476629710^{-5}, -3.734073310^{-5},
--4.498063210^{-5}, -2.829521410^{-5}, -1.30177310^{-5},
--1.247253510^{-5}, 1.703801610^{-5}, -4.028421210^{-5},
-2.967981410^{-4}, -4.799666410^{-5}, -4.723557710^{-5},
-3.118026810^{-4}, 1.517791210^{-4}, -4.409341310^{-5},
--2.385663210^{-5}, -2.626933210^{-5}, -1.723992710^{-5},
--3.194797810^{-5}, -2.221907510^{-5}, -2.343035710^{-5},
-1.67238410^{-6}, -3.34650610^{-5}, -3.705000110^{-5}, -3.921732510^{-5},
--1.613002910^{-5}, -4.232903910^{-5}, -4.677577110^{-5},
--3.235159910^{-5}, 3.83849210^{-7} of our sample. Accounts in this
-cluster feature posts that more heavily focus on the outdoors, health
-and nutrition, and personal fitness. There are two obvious actions to
-take for accounts in this cluster:
+There are 705 accountsin this cluster, or approximately 14.4% of our
+sample. Accounts in this cluster feature posts that more heavily focus
+on the outdoors, health and nutrition, and personal fitness. There are
+two obvious actions to take for accounts in this cluster:
 
 1.  Promote NutrientH20 products that have demonstrated positive health
     effects.
