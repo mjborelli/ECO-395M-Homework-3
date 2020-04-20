@@ -598,65 +598,6 @@ post category frequencies to determine characteristics of the group.
 ### Cluster 1 - Beauty / Lifestyle
 
     ##          chatter   current_events           travel    photo_sharing 
-    ##      -0.43696365      -0.16256461      -0.28483286      -0.42199755 
-    ##    uncategorized          tv_film    sports_fandom         politics 
-    ##      -0.20896349      -0.19301129       1.38984754      -0.38208596 
-    ##             food           family  home_and_garden            music 
-    ##       1.23923845       0.82412071      -0.07871086      -0.11700855 
-    ##             news    online_gaming         shopping health_nutrition 
-    ##      -0.26412566      -0.21683928      -0.30872812      -0.35235320 
-    ##      college_uni   sports_playing          cooking              eco 
-    ##      -0.29645605      -0.14727669      -0.35108687      -0.04237638 
-    ##        computers         business         outdoors           crafts 
-    ##      -0.09358104      -0.09756885      -0.25469394       0.23479800 
-    ##       automotive              art         religion           beauty 
-    ##      -0.09223795      -0.07072126       1.68210261       0.06739784 
-    ##        parenting           dating           school personal_fitness 
-    ##       1.53963195      -0.15959430       1.01375954      -0.31723751 
-    ##          fashion   small_business 
-    ##      -0.17740345      -0.07315778
-
-There are 1124 accounts in this cluster, or approximately 14.4% of our
-sample. Accounts in this sample have relative high amounts of cooking,
-fashion, and beauty content compared to the rest of the sample. This
-signifies a focus on beauty and lifestyle, potentially having crossover
-influence with Instagram as well. For accounts in this cluster,
-advertisements or partnerships that focus on the health benefits of
-NutrientH20 would be the best strategy.
-
-### Cluster 2 - Working Professionals
-
-    ##          chatter   current_events           travel    photo_sharing 
-    ##      -0.43525631      -0.20985579      -0.26887220      -0.40958479 
-    ##    uncategorized          tv_film    sports_fandom         politics 
-    ##      -0.11514593      -0.24557868      -0.34828354      -0.33223604 
-    ##             food           family  home_and_garden            music 
-    ##       0.12868679      -0.25502824      -0.09335940      -0.14025894 
-    ##             news    online_gaming         shopping health_nutrition 
-    ##      -0.19082712      -0.21260938      -0.28952461       1.75510742 
-    ##      college_uni   sports_playing          cooking              eco 
-    ##      -0.33184124      -0.16004682       0.20680778       0.11865424 
-    ##        computers         business         outdoors           crafts 
-    ##      -0.18647424      -0.15249392       1.08985640      -0.12061959 
-    ##       automotive              art         religion           beauty 
-    ##      -0.27894054      -0.11830662      -0.29330529      -0.28752627 
-    ##        parenting           dating           school personal_fitness 
-    ##      -0.26699839       0.01908027      -0.29604757       1.62817621 
-    ##          fashion   small_business 
-    ##      -0.26406308      -0.17882083
-
-There are 1370 accoutns in this cluster, or approximately 17.55% of our
-sample. Accounts in this cluster have higher than average frequencise of
-news, politics, automotive, computers, and travel content. This is a bit
-of a broader category of people in various working professions, with a
-cross-sectional interest in news and politics. Since these people are
-generally using their twitter accounts for their work interests,
-advertising to these accounts should focus on how NutrientH20 products
-can improve work performance and focus.
-
-### Cluster 3 - Parents
-
-    ##          chatter   current_events           travel    photo_sharing 
     ##      -0.45976112      -0.18909696      -0.24601501       0.43163139 
     ##    uncategorized          tv_film    sports_fandom         politics 
     ##       0.01474455      -0.26751196      -0.40264970      -0.36507319 
@@ -675,18 +616,15 @@ can improve work performance and focus.
     ##          fashion   small_business 
     ##       1.99441344      -0.05777160
 
-There are 817 accounts in this cluster, or approximately 10.46% of our
-sample. This cluster is centered around people who post more about food,
-sports, school, religion, family, and parenting. We would likely
-identify this cluster as parents considering the higher-than-average
-frequencies of school, family, and parenting. Marketing for these groups
-could invoke the health benefits of NutrientH20 products for children,
-since parents would but for themselves and for their children. As well,
-since this category contains people who post a lot of sports content,
-endorsements from sports celebrities could be influential for this
-cluster.
+There are 817 accounts in this cluster, or approximately 14.4% of our
+sample. Accounts in this sample have relative high amounts of cooking,
+fashion, and beauty content compared to the rest of the sample. This
+signifies a focus on beauty and lifestyle, potentially having crossover
+influence with Instagram as well. For accounts in this cluster,
+advertisements or partnerships that focus on the health benefits of
+NutrientH20 would be the best strategy.
 
-### Cluster 4 - General
+### Cluster 2 - Working Professionals
 
     ##          chatter   current_events           travel    photo_sharing 
     ##      -0.37096498      -0.10691954       0.96819253      -0.47852966 
@@ -707,16 +645,48 @@ cluster.
     ##          fashion   small_business 
     ##      -0.34071706      -0.05216397
 
-There are 1176 accounts in this cluster, or approximately 15.06% of our
-sample. This is the largest cluster in our sample and is defined by the
-lack of strong interests. With the most frequent categories being
-chatter and photo sharing, accounts in this cluster don’t have the same
-defined interests that other clusters exhibit. Because of this, we would
-recommend to save money by not use targeted advertising for these groups
-and instead relying on your general advertising campaigns to reach these
-accounts.
+There are 1176 accounts in this cluster, or approximately 17.55% of our
+sample. Accounts in this cluster have higher than average frequencise of
+news, politics, automotive, computers, and travel content. This is a bit
+of a broader category of people in various working professions, with a
+cross-sectional interest in news and politics. Since these people are
+generally using their twitter accounts for their work interests,
+advertising to these accounts should focus on how NutrientH20 products
+can improve work performance and focus.
 
-### Cluster 5 - University Students / Gamers
+### Cluster 3 - Parents
+
+    ##          chatter   current_events           travel    photo_sharing 
+    ##      -0.43696365      -0.16256461      -0.28483286      -0.42199755 
+    ##    uncategorized          tv_film    sports_fandom         politics 
+    ##      -0.20896349      -0.19301129       1.38984754      -0.38208596 
+    ##             food           family  home_and_garden            music 
+    ##       1.23923845       0.82412071      -0.07871086      -0.11700855 
+    ##             news    online_gaming         shopping health_nutrition 
+    ##      -0.26412566      -0.21683928      -0.30872812      -0.35235320 
+    ##      college_uni   sports_playing          cooking              eco 
+    ##      -0.29645605      -0.14727669      -0.35108687      -0.04237638 
+    ##        computers         business         outdoors           crafts 
+    ##      -0.09358104      -0.09756885      -0.25469394       0.23479800 
+    ##       automotive              art         religion           beauty 
+    ##      -0.09223795      -0.07072126       1.68210261       0.06739784 
+    ##        parenting           dating           school personal_fitness 
+    ##       1.53963195      -0.15959430       1.01375954      -0.31723751 
+    ##          fashion   small_business 
+    ##      -0.17740345      -0.07315778
+
+There are 1124 accounts in this cluster, or approximately 10.46% of our
+sample. This cluster is centered around people who post more about food,
+sports, school, religion, family, and parenting. We would likely
+identify this cluster as parents considering the higher-than-average
+frequencies of school, family, and parenting. Marketing for these groups
+could invoke the health benefits of NutrientH20 products for children,
+since parents would but for themselves and for their children. As well,
+since this category contains people who post a lot of sports content,
+endorsements from sports celebrities could be influential for this
+cluster.
+
+### Cluster 4 - General
 
     ##          chatter   current_events           travel    photo_sharing 
     ##       0.83068483       0.34364731      -0.04741045       0.56693904 
@@ -737,6 +707,36 @@ accounts.
     ##          fashion   small_business 
     ##      -0.18719829       0.16582999
 
+There are 2615 accounts in this cluster, or approximately 15.06% of our
+sample. This is the largest cluster in our sample and is defined by the
+lack of strong interests. With the most frequent categories being
+chatter and photo sharing, accounts in this cluster don’t have the same
+defined interests that other clusters exhibit. Because of this, we would
+recommend to save money by not use targeted advertising for these groups
+and instead relying on your general advertising campaigns to reach these
+accounts.
+
+### Cluster 5 - University Students / Gamers
+
+    ##          chatter   current_events           travel    photo_sharing 
+    ##     -0.387110470     -0.210188762     -0.177467771     -0.336143498 
+    ##    uncategorized          tv_film    sports_fandom         politics 
+    ##     -0.067134659      0.193350484     -0.291519099     -0.351163797 
+    ##             food           family  home_and_garden            music 
+    ##     -0.220900739     -0.101629415     -0.097373083      0.133015787 
+    ##             news    online_gaming         shopping health_nutrition 
+    ##     -0.314498844      2.317103063     -0.374709956     -0.368768146 
+    ##      college_uni   sports_playing          cooking              eco 
+    ##      2.434243530      1.184939557     -0.344237276     -0.186248730 
+    ##        computers         business         outdoors           crafts 
+    ##     -0.205084675     -0.134592108     -0.249417866     -0.173464318 
+    ##       automotive              art         religion           beauty 
+    ##     -0.182920798      0.013056302     -0.261261727     -0.289249359 
+    ##        parenting           dating           school personal_fitness 
+    ##     -0.306169654     -0.125927136     -0.330462811     -0.365178443 
+    ##          fashion   small_business 
+    ##     -0.252568935      0.002996711
+
 There are 2615 accounts in this cluster, or approximately 14.4% of our
 sample. Accounts in this cluster tend to exhibit higher than average
 post frequencies for online gaming, college, and playing sports. In this
@@ -749,7 +749,7 @@ college students are prone to. Advertising directly to those two needs
 would help to improve sales, while looking at sponsoring eSports
 competitions or leagues could increase your customer base.
 
-Cluster 6 - Physical Fitness
+#### Cluster 6 - Physical Fitness
 
     ##          chatter   current_events           travel    photo_sharing 
     ##     -0.387110470     -0.210188762     -0.177467771     -0.336143498 
