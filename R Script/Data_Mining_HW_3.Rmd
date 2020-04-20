@@ -13,6 +13,7 @@ library(plyr)
 library(ggplot2)
 library(randomForest)
 library(stargazer)
+library(foreach)
 ```
 
 # Predictive Model Building
@@ -135,7 +136,7 @@ The model errors are high at low amounts of trees, flattening out at around 100 
 
 Random Forests, as well as other large tree regression methods, are generally not interpretable. However, we can create measures of variable importance to help understand which feature variables by looking at which variables best improve error within the aggregated trees. Below is a variable importance plot, ranked in order of importance.
 
-```{r, importance}
+```{r, green_importance, echo = FALSE}
 varImpPlot(forest_green)
 ```
 
@@ -152,12 +153,12 @@ stargazer(simple_green, type="text")
 
 FIX THIS MATT In this regression, we get positive coefficients for each of the green certification variables, but only EnergyStar certification's effect is statistically significant. LEED does not have any significantly positive effect on rent in our simple model. To compare, the following is the model picked by stepwise selection using AIC as the loss function.
 
-```{r green_step, include=FALSE}
+```{r green_step, include = FALSE}
 green_step = step(simple_green, 
 			scope=~(. +size + leasing_rate + stories + age + renovated + class_a + class_b  + net + amenities + total_dd_07 + Precipitation + Gas_Costs + Electricity_Costs))
 ```
 
-```{r green_final_model}
+```{r green_final_model, echo = FALSE}
 final_green = glm(norm_rent ~ LEED + Energystar + class_a + size + class_b + Gas_Costs + 
     net + age + leasing_rate + amenities, data = green)
 
@@ -179,16 +180,26 @@ Our regression selection method produced a model that regressed the cluster-norm
 ##  Question 1.
 #### Why can’t I just get data from a few different cities and run the regression of “Crime” on “Police” to understand how more cops in the streets affect crime? (“Crime” refers to some measure of crime rate and “Police” measures the number of cops in a city.)
 
-You can't just run a regression of "amount of crime" on "amount of police" because cities with high rates of crime have a clear incentive to have more police officers. Since the amount of police officers is usually based on the amount of crime, running OLS of "Crime" on "Police" would get a positive coefficient, meaning that more police are associated with more crime. This might literally be true, but not the causal relationship we actually want to address
+You can't just run a regression of "amount of crime" on "amount of police" because cities with high rates of crime have a clear incentive to have more police officers. Since the amount of police officers is usually based on the amount of crime, running OLS of "Crime" on "Police" would get a positive coefficient, meaning that more police are associated with more crime. This might literally be true, but not the causal relationship we actually want to address.
 
 ## Question 2.
+#### How were the researchers from UPenn able to isolate this effect? Briefly describe their approach and discuss their result in the “Table 2” below, from the researchers' paper.
+The UPenn researchers got around the exogeneity problem mentioned in question 1 by studying crime rates in D.C. as they relate to the Terrorism Alert System (TAS). Since D.C. is a likely target of terrorist attacks, on days where the TAS is at "High Alert" level, more police are stationed on the National Mall. This large change in active police officers in the area is unrelated to the amount of normal (i.e. non-terrorism) crime in that area. Therefore, the researchers run two regressions
 
-The UPenn researchers found that 
+1. "Total number of crimes in D.C." regressed onto "High Alert" 
+2. "Total number of crimes in D.C." regressed onto "High Alert" and "log midday metro ridership"
+
+Regression 1 found that high-alert days are associated with a 7.316 decrease in crimes per day with 10% significancelevel. Regression 2 found that high-alert days are associated a 6.046 decrease in crimes per day at a 10% significance level, and a 10% increase in midday metro ridership is associated with a 1.7341 increase in daily crimes at a 5% significance level. Since high-alert days have exogenously higher amounts of police, we estimate that increases in active police officers are associated with decreases in daily crime in D.C.
 
 ## Question 3.
+#### Why did they have to control for Metro ridership? What was that trying to capture?
+
+The authors controlled for Metro ridership to hold constant the amount of people in Washington D.C. on high-alert days. They did this to test the concern that on high-alert days less people are on the National Mall. Having fewer people on the mall, basically meaning that there are less potential victims avaible, would mean that crime rates would fall for a reason outside of the increased police forces. Therefore, controlling for Metro ridership removes that causality from the error term, giving us a more accurate estimate of the effect of police on crime.
 
 ## Question 4.
+#### Below I am showing you "Table 4" from the researchers' paper. Just focus on the first column of the table. Can you describe the model being estimated here? What is the conclusion?
 
+In this model, they have split crime amounts into two categories: crime in District 1 and crime in all other districts. District 1 in Washington D.C. contains the National Mall, where most extra security is placed during high-alert days. In the results, we see that while crime in all other districts of D.C. dont experience any significant decrease during high-alert days, crime in district 1 does at the 5% significance level, controlling for metro ridership. This is stronger evidence for the effect of police on crime, as the district with the most additional police experiences the strongestdecline in daily crime rates.
 
 # Clustering and PCA
 
@@ -198,9 +209,106 @@ wine = read.csv("./wine.csv")
 
 ## Introduction
 
+How can we best determine what color a wine is? Can we tell anything about the quality of that wine based on its chemical properties. In this section, we will explore these questions using clustering and principal component analysis. We want to see if we 
+
 ## Data and Model
 
+``` {r wine_null, echo=FALSE}
+# To set up null model, we have to see how many of each there are
+
+wine_red_null = sum(wine$color == "red")
+wine_white_null = sum(wine$color == "white")
+
+wine_null_accuracy = round(100*wine_white_null/(wine_white_null + wine_red_null), 2)
+```
+
+In order to evaluate clustering and principal component analysis models for determing wine color, we want to first set up a null model. In the data set, there are `r wine_red_null` observations of red wine and `r wine_white_null` observations of white wine. Since our model has more white wine observations than red, the null model predicts white wine for each observation. The null model has a `r wine_null_accuracy`% accuracy, the baseline that we will compare the other models to.
+
 ## Results
+
+### K-Means Clustering
+
+```{r wine_cluster_1, echo=FALSE}
+wine_scale = wine[, -(12:13)]
+wine_scale = scale(wine_scale, center=TRUE, scale=TRUE)
+
+# Extract the centers and scales from the rescaled data (which are named attributes)
+mu = attr(wine_scale , "scaled:center")
+sigma = attr(wine_scale , "scaled:scale")
+
+# Run k-means with 2 clusters ((hopefully white and red) and 25 starts
+clust1 = kmeans(wine_scale, 2, nstart=25)
+```
+```{r wine_clust_1_display, echo=FALSE}
+clust1$center[1,]*sigma + mu
+```
+```{r wine_clust_2_display, echo=FALSE}
+clust1$center[2,]*sigma + mu
+```
+
+```{r whats_in_cluster, include=FALSE}
+which(clust1$cluster == 1)
+which(clust1$cluster == 2)
+
+#exploring errors of the cluster
+clust1$withinss
+sum(clust1$withinss)
+clust1$tot.withinss
+clust1$betweenss
+```
+```{r cluster_predictions, echo=FALSE}
+#grab cluster assignments
+clust_data = as.data.frame(clust1$cluster)
+colnames(clust_data)[1] = "cluster"
+clust_data = transform(clust_data, cluster = as.numeric(cluster))
+
+wine['cluster'] = clust_data['cluster']
+
+wine_clust_table = table(Cluster = wine$cluster, Color = wine$color)
+wine_clust_table
+
+cluster_accuracy = round(100*(wine_clust_table[1,1] + wine_clust_table[2,2]) / nrow(wine))
+```
+
+Clustering is increibly accurate, with a `r cluster_accuracy`% accruacy, giving clustering a lift of `r (cluster_accuracy / wine_null_accuracy)` over the null model.
+
+### Principal Components Analysis
+
+```{r wine_PCA, echo=FALSE}
+#no pun intended for reduced wine
+pc2 = prcomp(wine_scale, scale=TRUE, rank=2)
+loadings = pc2$rotation
+scores = pc2$x
+
+qplot(scores[,1], scores[,2], color=wine$color, xlab='Component 1', ylab='Component 2' ) +
+    theme_dark() + scale_color_manual(values=c("red", "white"))
+
+```
+```{r wine_pca_insides_1, echo=FALSE}
+v_best = pc2$rotation[,1]
+v_best
+```
+```{r wine_pca_insides_2, echo=FALSE}
+v_second_best = pc2$rotation[,2]
+v_second_best
+```
+
+```{r PCA_var, include=FALSE}
+wine_var_bycomponent = apply(wine_scale, 2, var)
+total_wine_var = sum(wine_var_bycomponent)
+
+# dot product
+alpha_best = wine_scale %*% v_best
+alpha_second = wine_scale %*% v_second_best
+
+explained_wine_var_1 = var(alpha_best)/total_wine_var
+explained_wine_var_2 = var(alpha_second)/total_wine_var
+```
+
+```{r pca_quality}
+qplot(scores[,1], scores[,2], color=wine$quality, xlab='Component 1', ylab='Component 2' ) +
+    theme_dark()
+```
 
 ## Conclusion
 
@@ -214,7 +322,55 @@ social = read.csv("./social_marketing.csv")
 
 ## Data and Model
 
+```{r social_preprocessing, include=FALSE}
+
+# First step of pre-processing is to translate raw numbers of tweets into frequencies
+
+social_freq = social[,-(1)]/rowSums(social[,-(1)])
+
+#Look at counts of spam and adult
+summary(social_freq[,35:36])
+
+# filtering out any accounts with accounts with more than 20% adult content as well as removing spam and adult columns
+
+social_freq = subset(social_freq[social_freq$adult < 0.25 , -c(35:36)])
+```
+
+```{r cluster_social, include=FALSE}
+library(LICORS)
+social_elbow = data.frame(K = as.integer(), Within_Error = as.numeric())
+# Homemade elbow plot!
+for (i in 1:10) {
+    clust_social = kmeanspp(social_freq, k = i, nstart = 25)
+    social_elbow[i, 1] = i
+    social_elbow[i, 2] = sum(clust_social$withinss)
+}
+
+ggplot(data=social_elbow, mapping = aes(x = K, y = Within_Error)) + 
+    geom_line()
+
+# The elbow seems to be at K = 6, so we will go with a K+ Means model with 6 clusters
+```
+
 ## Results
+
+```{r social_final_cluster}
+
+# Originally wasn't going to, but we need to scale the data to get better intuitions into what these clusters represent
+
+social_freq_scaled = scale(social_freq, center=TRUE, scale=TRUE)
+
+clust6_social = kmeanspp(social_freq_scaled, k = 6, nstart = 25)
+
+Social_Cluster_1 = clust6_social$center[1,]
+Social_Cluster_2 = clust6_social$center[2,]
+Social_cluster_3 = clust6_social$center[3,]
+Social_Cluster_4 = clust6_social$center[4,]
+Social_Cluster_5 = clust6_social$center[5,]
+Social_cluster_6 = clust6_social$center[6,]
+```
+
+
 
 ## Conclusion
 

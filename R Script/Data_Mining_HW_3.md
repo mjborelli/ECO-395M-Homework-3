@@ -129,9 +129,7 @@ importance to help understand which feature variables by looking at
 which variables best improve error within the aggregated trees. Below is
 a variable importance plot, ranked in order of importance.
 
-    varImpPlot(forest_green)
-
-![](Data_Mining_HW_3_files/figure-markdown_strict/importance-1.png)
+![](Data_Mining_HW_3_files/figure-markdown_strict/green_importance-1.png)
 
 Some of the most important variables are closely related since
 electricity costs, total days of heating or cooling required,
@@ -179,11 +177,6 @@ certification’s effect is statistically significant. LEED does not have
 any significantly positive effect on rent in our simple model. To
 compare, the following is the model picked by stepwise selection using
 AIC as the loss function.
-
-    final_green = glm(norm_rent ~ LEED + Energystar + class_a + size + class_b + Gas_Costs + 
-        net + age + leasing_rate + amenities, data = green)
-
-    stargazer(final_green, type="text")
 
     ## 
     ## =============================================
@@ -291,18 +284,64 @@ to have more police officers. Since the amount of police officers is
 usually based on the amount of crime, running OLS of “Crime” on “Police”
 would get a positive coefficient, meaning that more police are
 associated with more crime. This might literally be true, but not the
-causal relationship we actually want to address
+causal relationship we actually want to address.
 
 Question 2.
 -----------
 
-The UPenn researchers found that
+#### How were the researchers from UPenn able to isolate this effect? Briefly describe their approach and discuss their result in the “Table 2” below, from the researchers’ paper.
+
+The UPenn researchers got around the exogeneity problem mentioned in
+question 1 by studying crime rates in D.C. as they relate to the
+Terrorism Alert System (TAS). Since D.C. is a likely target of terrorist
+attacks, on days where the TAS is at “High Alert” level, more police are
+stationed on the National Mall. This large change in active police
+officers in the area is unrelated to the amount of normal
+(i.e. non-terrorism) crime in that area. Therefore, the researchers run
+two regressions
+
+1.  “Total number of crimes in D.C.” regressed onto “High Alert”
+2.  “Total number of crimes in D.C.” regressed onto “High Alert” and
+    “log midday metro ridership”
+
+Regression 1 found that high-alert days are associated with a 7.316
+decrease in crimes per day with 10% significancelevel. Regression 2
+found that high-alert days are associated a 6.046 decrease in crimes per
+day at a 10% significance level, and a 10% increase in midday metro
+ridership is associated with a 1.7341 increase in daily crimes at a 5%
+significance level. Since high-alert days have exogenously higher
+amounts of police, we estimate that increases in active police officers
+are associated with decreases in daily crime in D.C.
 
 Question 3.
 -----------
 
+#### Why did they have to control for Metro ridership? What was that trying to capture?
+
+The authors controlled for Metro ridership to hold constant the amount
+of people in Washington D.C. on high-alert days. They did this to test
+the concern that on high-alert days less people are on the National
+Mall. Having fewer people on the mall, basically meaning that there are
+less potential victims avaible, would mean that crime rates would fall
+for a reason outside of the increased police forces. Therefore,
+controlling for Metro ridership removes that causality from the error
+term, giving us a more accurate estimate of the effect of police on
+crime.
+
 Question 4.
 -----------
+
+#### Below I am showing you “Table 4” from the researchers’ paper. Just focus on the first column of the table. Can you describe the model being estimated here? What is the conclusion?
+
+In this model, they have split crime amounts into two categories: crime
+in District 1 and crime in all other districts. District 1 in Washington
+D.C. contains the National Mall, where most extra security is placed
+during high-alert days. In the results, we see that while crime in all
+other districts of D.C. dont experience any significant decrease during
+high-alert days, crime in district 1 does at the 5% significance level,
+controlling for metro ridership. This is stronger evidence for the
+effect of police on crime, as the district with the most additional
+police experiences the strongestdecline in daily crime rates.
 
 Clustering and PCA
 ==================
@@ -310,11 +349,79 @@ Clustering and PCA
 Introduction
 ------------
 
+How can we best determine what color a wine is? Can we tell anything
+about the quality of that wine based on its chemical properties. In this
+section, we will explore these questions using clustering and principal
+component analysis. We want to see if we
+
 Data and Model
 --------------
 
+In order to evaluate clustering and principal component analysis models
+for determing wine color, we want to first set up a null model. In the
+data set, there are 1599 observations of red wine and 4898 observations
+of white wine. Since our model has more white wine observations than
+red, the null model predicts white wine for each observation. The null
+model has a 75.39% accuracy, the baseline that we will compare the other
+models to.
+
 Results
 -------
+
+### K-Means Clustering
+
+    ##        fixed.acidity     volatile.acidity          citric.acid 
+    ##            8.2895922            0.5319416            0.2695435 
+    ##       residual.sugar            chlorides  free.sulfur.dioxide 
+    ##            2.6342666            0.0883238           15.7647596 
+    ## total.sulfur.dioxide              density                   pH 
+    ##           48.6396835            0.9967404            3.3097200 
+    ##            sulphates              alcohol 
+    ##            0.6567194           10.4015216
+
+    ##        fixed.acidity     volatile.acidity          citric.acid 
+    ##           6.85167903           0.27458385           0.33524928 
+    ##       residual.sugar            chlorides  free.sulfur.dioxide 
+    ##           6.39402555           0.04510424          35.52152864 
+    ## total.sulfur.dioxide              density                   pH 
+    ##         138.45848785           0.99400486           3.18762464 
+    ##            sulphates              alcohol 
+    ##           0.48880511          10.52235888
+
+    ##        Color
+    ## Cluster  red white
+    ##       1 1575    68
+    ##       2   24  4830
+
+Clustering is increibly accurate, with a 99% accruacy, giving clustering
+a lift of 1.3131715 over the null model.
+
+### Principal Components Analysis
+
+![](Data_Mining_HW_3_files/figure-markdown_strict/wine_PCA-1.png)
+
+    ##        fixed.acidity     volatile.acidity          citric.acid 
+    ##          -0.23879890          -0.38075750           0.15238844 
+    ##       residual.sugar            chlorides  free.sulfur.dioxide 
+    ##           0.34591993          -0.29011259           0.43091401 
+    ## total.sulfur.dioxide              density                   pH 
+    ##           0.48741806          -0.04493664          -0.21868644 
+    ##            sulphates              alcohol 
+    ##          -0.29413517          -0.10643712
+
+    ##        fixed.acidity     volatile.acidity          citric.acid 
+    ##           0.33635454           0.11754972           0.18329940 
+    ##       residual.sugar            chlorides  free.sulfur.dioxide 
+    ##           0.32991418           0.31525799           0.07193260 
+    ## total.sulfur.dioxide              density                   pH 
+    ##           0.08726628           0.58403734          -0.15586900 
+    ##            sulphates              alcohol 
+    ##           0.19171577          -0.46505769
+
+    qplot(scores[,1], scores[,2], color=wine$quality, xlab='Component 1', ylab='Component 2' ) +
+        theme_dark()
+
+![](Data_Mining_HW_3_files/figure-markdown_strict/pca_quality-1.png)
 
 Conclusion
 ----------
@@ -330,6 +437,19 @@ Data and Model
 
 Results
 -------
+
+    # Originally wasn't going to, but we need to scale the data to get better intuitions into what these clusters represent
+
+    social_freq_scaled = scale(social_freq, center=TRUE, scale=TRUE)
+
+    clust6_social = kmeanspp(social_freq_scaled, k = 6, nstart = 25)
+
+    Social_Cluster_1 = clust6_social$center[1,]
+    Social_Cluster_2 = clust6_social$center[2,]
+    Social_cluster_3 = clust6_social$center[3,]
+    Social_Cluster_4 = clust6_social$center[4,]
+    Social_Cluster_5 = clust6_social$center[5,]
+    Social_cluster_6 = clust6_social$center[6,]
 
 Conclusion
 ----------
