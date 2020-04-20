@@ -499,7 +499,7 @@ There are 705 accounts in this cluster, or approximately 9.03% of our sample. Ac
 
 #### Cluster 6 - Physical Fitness
 ```{r Social_Clust_6, echo = FALSE}
-clust6_social$center[6,]
+Social_Cluster_6
 C6_obs = sum(clust6_social$cluster == 6)
 clust6_pct = clust6_social$center[6,] / social_obs
 ```

@@ -740,23 +740,23 @@ competitions or leagues could increase your customer base.
 #### Cluster 6 - Physical Fitness
 
     ##          chatter   current_events           travel    photo_sharing 
-    ##     -0.387110470     -0.210188762     -0.177467771     -0.336143498 
+    ##      -0.43525631      -0.20985579      -0.26887220      -0.40958479 
     ##    uncategorized          tv_film    sports_fandom         politics 
-    ##     -0.067134659      0.193350484     -0.291519099     -0.351163797 
+    ##      -0.11514593      -0.24557868      -0.34828354      -0.33223604 
     ##             food           family  home_and_garden            music 
-    ##     -0.220900739     -0.101629415     -0.097373083      0.133015787 
+    ##       0.12868679      -0.25502824      -0.09335940      -0.14025894 
     ##             news    online_gaming         shopping health_nutrition 
-    ##     -0.314498844      2.317103063     -0.374709956     -0.368768146 
+    ##      -0.19082712      -0.21260938      -0.28952461       1.75510742 
     ##      college_uni   sports_playing          cooking              eco 
-    ##      2.434243530      1.184939557     -0.344237276     -0.186248730 
+    ##      -0.33184124      -0.16004682       0.20680778       0.11865424 
     ##        computers         business         outdoors           crafts 
-    ##     -0.205084675     -0.134592108     -0.249417866     -0.173464318 
+    ##      -0.18647424      -0.15249392       1.08985640      -0.12061959 
     ##       automotive              art         religion           beauty 
-    ##     -0.182920798      0.013056302     -0.261261727     -0.289249359 
+    ##      -0.27894054      -0.11830662      -0.29330529      -0.28752627 
     ##        parenting           dating           school personal_fitness 
-    ##     -0.306169654     -0.125927136     -0.330462811     -0.365178443 
+    ##      -0.26699839       0.01908027      -0.29604757       1.62817621 
     ##          fashion   small_business 
-    ##     -0.252568935      0.002996711
+    ##      -0.26406308      -0.17882083
 
 There are 1370 accounts in this cluster, or approximately 17.55% of our
 sample. Accounts in this cluster feature posts that more heavily focus
