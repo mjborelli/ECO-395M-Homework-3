@@ -113,7 +113,7 @@ green = green[-c(817, 1016, 1017, 1234, 1235, 1968, 2155, 2867, 2868, 3009, 3010
 ## Results
 
 ### Random Forest Model Errors
-```{r green_forest_eval, include=FALSE}
+```{r green_forest_eval, echo=FALSE}
 # Setting a seed for consistent results
 set.seed(14)
 
@@ -151,7 +151,7 @@ simple_green = glm(norm_rent ~ LEED + Energystar + Energystar*LEED, data=green)
 stargazer(simple_green, type="text")
 ```
 
-FIX THIS MATT In this regression, we get positive coefficients for each of the green certification variables, but only EnergyStar certification's effect is statistically significant. LEED does not have any significantly positive effect on rent in our simple model. To compare, the following is the model picked by stepwise selection using AIC as the loss function.
+In this regression, we get positive coefficients for each of the green certification variable with both estimates having statistical significance at the 1% level. The estimated coefficient for the interaction between the two green certificaiton dummy variables is not statistically significant, most likely because there are only 7 buildings in the data that have both LEED and EnergyStar certification. The following is the model found by stepwise selection using AIC as the loss function.
 
 ```{r green_step, include = FALSE}
 green_step = step(simple_green, 
@@ -177,12 +177,12 @@ Our regression selection method produced a model that regressed the cluster-norm
 
 # What Causes What?
 
-##  Question 1.
+##  Question 1
 #### Why can’t I just get data from a few different cities and run the regression of “Crime” on “Police” to understand how more cops in the streets affect crime? (“Crime” refers to some measure of crime rate and “Police” measures the number of cops in a city.)
 
 You can't just run a regression of "amount of crime" on "amount of police" because cities with high rates of crime have a clear incentive to have more police officers. Since the amount of police officers is usually based on the amount of crime, running OLS of "Crime" on "Police" would get a positive coefficient, meaning that more police are associated with more crime. This might literally be true, but not the causal relationship we actually want to address.
 
-## Question 2.
+## Question 2
 #### How were the researchers from UPenn able to isolate this effect? Briefly describe their approach and discuss their result in the “Table 2” below, from the researchers' paper.
 The UPenn researchers got around the exogeneity problem mentioned in question 1 by studying crime rates in D.C. as they relate to the Terrorism Alert System (TAS). Since D.C. is a likely target of terrorist attacks, on days where the TAS is at "High Alert" level, more police are stationed on the National Mall. This large change in active police officers in the area is unrelated to the amount of normal (i.e. non-terrorism) crime in that area. Therefore, the researchers run two regressions
 
@@ -191,12 +191,12 @@ The UPenn researchers got around the exogeneity problem mentioned in question 1 
 
 Regression 1 found that high-alert days are associated with a 7.316 decrease in crimes per day with 10% significancelevel. Regression 2 found that high-alert days are associated a 6.046 decrease in crimes per day at a 10% significance level, and a 10% increase in midday metro ridership is associated with a 1.7341 increase in daily crimes at a 5% significance level. Since high-alert days have exogenously higher amounts of police, we estimate that increases in active police officers are associated with decreases in daily crime in D.C.
 
-## Question 3.
+## Question 3
 #### Why did they have to control for Metro ridership? What was that trying to capture?
 
 The authors controlled for Metro ridership to hold constant the amount of people in Washington D.C. on high-alert days. They did this to test the concern that on high-alert days less people are on the National Mall. Having fewer people on the mall, basically meaning that there are less potential victims avaible, would mean that crime rates would fall for a reason outside of the increased police forces. Therefore, controlling for Metro ridership removes that causality from the error term, giving us a more accurate estimate of the effect of police on crime.
 
-## Question 4.
+## Question 4
 #### Below I am showing you "Table 4" from the researchers' paper. Just focus on the first column of the table. Can you describe the model being estimated here? What is the conclusion?
 
 In this model, they have split crime amounts into two categories: crime in District 1 and crime in all other districts. District 1 in Washington D.C. contains the National Mall, where most extra security is placed during high-alert days. In the results, we see that while crime in all other districts of D.C. dont experience any significant decrease during high-alert days, crime in district 1 does at the 5% significance level, controlling for metro ridership. This is stronger evidence for the effect of police on crime, as the district with the most additional police experiences the strongestdecline in daily crime rates.
@@ -209,7 +209,7 @@ wine = read.csv("./wine.csv")
 
 ## Introduction
 
-How can we best determine what color a wine is? Can we tell anything about the quality of that wine based on its chemical properties. In this section, we will explore these questions using clustering and principal component analysis. We want to see if we 
+There are two main type of wine: red and white. Besides the obvious visual difference in color, how can we best determine what color a wine is? Can we tell anything about the quality of that wine based on its chemical properties. In this section, we will explore these questions while determining which method of unsupervised learning works best for this type of data science problem: clustering, or principal components analysis.
 
 ## Data and Model
 
@@ -222,11 +222,21 @@ wine_white_null = sum(wine$color == "white")
 wine_null_accuracy = round(100*wine_white_null/(wine_white_null + wine_red_null), 2)
 ```
 
+The data we are working with consists of approximately 6500 wines with the following recorded information:
+
+- Chemical properties of the wine, such as the amount of chlorides, pH, and acidity levels.
+- The quality of the wine as determined by a panel of "certified wine snobs" on a 1-10 scale.
+- Whether the wine is red or white.
+
+To ensure that the unsupervised models are not biased by variables with difference variances, we standardize all of the chemical properties. This gives us 11 feature variables (chemical properties of the wine) represented with $\mu$ = 0 and $\sigma^2$ = 1. 
+
 In order to evaluate clustering and principal component analysis models for determing wine color, we want to first set up a null model. In the data set, there are `r wine_red_null` observations of red wine and `r wine_white_null` observations of white wine. Since our model has more white wine observations than red, the null model predicts white wine for each observation. The null model has a `r wine_null_accuracy`% accuracy, the baseline that we will compare the other models to.
 
 ## Results
 
 ### K-Means Clustering
+
+In general, when using K-Means clustering, you want to evaluate the model for differing numbers of clusters in order to determine which gives the best balance between lowering within-cluster errors and not overfitting the model. However, if you have knowledge about your data and know what information you are looking for, it is generally best to choose the number of clusters in a way that enables clear interpretations. For our problem, it is clear that we should use 2 clusters since we're looking for clusters that would represent the two categories of wine that we have, red and white.
 
 ```{r wine_cluster_1, echo=FALSE}
 wine_scale = wine[, -(12:13)]
@@ -270,28 +280,51 @@ wine_clust_table
 cluster_accuracy = round(100*(wine_clust_table[1,1] + wine_clust_table[2,2]) / nrow(wine))
 ```
 
-Clustering is increibly accurate, with a `r cluster_accuracy`% accruacy, giving clustering a lift of `r (cluster_accuracy / wine_null_accuracy)` over the null model.
+Since our clustering model is based off 11 variables, we can't plot our clustering with all 11 feature variables at the same time. Instead, we show a visualization to demonstrate what clustering is doing.
+
+```{r wine_clust_plot, echo = FALSE}
+ggplot(data=wine, mapping = aes(sulphates, total.sulfur.dioxide, color=factor(clust1$cluster), shape = wine$color)) +
+    geom_point() +
+    scale_color_manual(values=c("red", "white")) + 
+    theme_dark() +
+    labs(y = "Total Sulfur Dioxide", x = "Sulphates", title = "Wine Clustering on Sulphate and Total Sulfur Dioxide Plane")
+```
+This graph shows a slice of what is happening in our cluster model, specifically the plane of sulphate amounts as the x-axis and total sulfur dioxide as the y-axis. While the clusters aren't automatically assigned as "White Cluster" and "Red Cluster", looking into the results reveals that most red wines are in cluster 1 and most white wines are in cluster 2. The shapes in the graph, though a bit hard to see, show that our predictions are mostly accurate. While our model seems to show intermingling the clusters, that is because they are actually separated in the other dimensions that are projected onto the plane above.
+
+Clustering is quite accurate in this scenario, with a `r cluster_accuracy`% accruacy. This mean clustering generates a lift of `r (cluster_accuracy / wine_null_accuracy)` over the null model. However, it might not be the best model to use for this as the chemical properties of a wine might vary with each other in ways that affect our results.
 
 ### Principal Components Analysis
 
+Principal Components Analysis (PCA) reduces the dimensionality of large data sets by finding the linear combinations of the feature variables that explain the most variation in the data points. As opposed to clustering, it is much easier to visualize the results of PCA as the process captures certain variations of all 11 features variables into each principal component vector. In this visualization, we look at the first two principal components.
+
 ```{r wine_PCA, echo=FALSE}
 #no pun intended for reduced wine
-pc2 = prcomp(wine_scale, scale=TRUE, rank=2)
+pc2 = prcomp(wine_scale, scale=TRUE, rank=3)
 loadings = pc2$rotation
 scores = pc2$x
 
 qplot(scores[,1], scores[,2], color=wine$color, xlab='Component 1', ylab='Component 2' ) +
-    theme_dark() + scale_color_manual(values=c("red", "white"))
+    theme_dark() + 
+    scale_color_manual(values=c("red", "white")) +
+        labs(y = "Principal Component 2", x = "Principal Component 1", title = "Principal Component Analysis and Wine Color")
+
 
 ```
+Our principal component vectors do a fairly good job of separating red and white wines. White wines tend to score more positively in principal component 1 and a bit lower on average in principal component 2. But what does that mean? To answer that, we have to see what are in our principal components.
+#### Principal Component 1
+
 ```{r wine_pca_insides_1, echo=FALSE}
 v_best = pc2$rotation[,1]
 v_best
 ```
+Wines that have higher principal component 1 values tend to be below average in acidity and pH, and above average in sugar and sulfur dioxide. Since we know that white whines generally score positive in principal component 1, we know that white whines tend to be less acidic and contain more sugar and sulfur dioxide on average than red wines.
+
+#### Principal Component 2
 ```{r wine_pca_insides_2, echo=FALSE}
 v_second_best = pc2$rotation[,2]
 v_second_best
 ```
+Principal component 2, as our graph shows, helps to distinctify some of the red and white wines in the "middle" of the data, so its likely that red wines have higher values on average than white wines in the middle. Wine density and alcohol amount are the most important variables in this principal component as their rotation values are the highest in this vector.
 
 ```{r PCA_var, include=FALSE}
 wine_var_bycomponent = apply(wine_scale, 2, var)
@@ -301,26 +334,52 @@ total_wine_var = sum(wine_var_bycomponent)
 alpha_best = wine_scale %*% v_best
 alpha_second = wine_scale %*% v_second_best
 
-explained_wine_var_1 = var(alpha_best)/total_wine_var
-explained_wine_var_2 = var(alpha_second)/total_wine_var
-```
+# add in third principal component vector
 
+v_third_best = pc2$rotation[,3]
+alpha_third = wine_scale %*% v_third_best
+
+explained_wine_var_1 = as.numeric(var(alpha_best)/total_wine_var)
+explained_wine_var_2 = as.numeric(var(alpha_second)/total_wine_var)
+explained_wine_var_3 = as.numeric(var(alpha_third)/total_wine_var)
+```
+We can't determine an accuracy rate the same way we did for clustering, but we can look at how much variation these principle components explain. The first principal component explains `r 100*round(explained_wine_var_1, 4)`% of the variation, the second principal component explains `r 100*round(explained_wine_var_2, 4)`% of the variation. We have also calculated that the third principal component explaines `r 100*round(explained_wine_var_3, 4)`% of the variation, giving us that the first three principal components explain `r 100*round((explained_wine_var_1 + explained_wine_var_2 + explained_wine_var_3), 4)`% of the total variation. Considering that we could add more principal components, this model is a valid way of differentiating red and white wines while allowing for highly correlated feature variables to vary together.
+
+## Wine Quality
+
+Now that we have selected PCA as our method for quantifying differences in white and red wine, we will see if this method is applicable to the quality of the wine. The very idea of quantifying the quality of wine has been a hotly debated topic. Experts in the wine industry claim that they can very easily tell the difference between a finely-aged Cabernet Sauvignon  and a cheap variant that anyone could pick up in the store. Do our principal components, based on objective measures of the chemical properties of wine, tell us anything about the expert-judged quality of the wine?
 ```{r pca_quality}
-qplot(scores[,1], scores[,2], color=wine$quality, xlab='Component 1', ylab='Component 2' ) +
-    theme_dark()
+qplot(scores[,1], scores[,2], color=wine$quality, xlab='Component 1', ylab='Component 2') + 
+    labs(title="Wine Quality across Principal Components") + 
+    scale_colour_gradient2(
+  low = "red",
+  mid = "white",
+  high = "Green",
+  midpoint = 6,
+  space = "Lab",
+  na.value = "grey50",
+  guide = "colourbar",
+  aesthetics = "colour"
+) +
+theme_dark()
 ```
 
-## Conclusion
+Principal component one does not tell us very much about quality, as quality seems to be evenly distributed across the x-axis. However, there seems to be negative correlation between principal component 2 and quality. While quality is certainly a subjective topic, the chemical properties found to be most important in the principal component 2 can tell us what affects the subjective quality ratings. Primarily, wines with more alcohol and less density tend to score worse in component 2, which generally means these wines will more likely be considered as high quality. While wine quality is certainly still a subjective measure, there is at least some objective basis underlying the preferences of wine critics.
 
 # Market Segmentation
 
 ```{r social_data, include=FALSE}
 social = read.csv("./social_marketing.csv")
+
+# Just want to state that I'm not sure from the prompt if I "work for" Nutrien
 ```
 
 ## Introduction
 
-## Data and Model
+To help NutrientH20's online-advertising campaigns, we want to identify potential marketing segments to help better tailor your advertising to the interests of consumers who are already interested in your product. To do this, the advertising firm that has been running your online ad campaign collected every tweet from a sample of your Twitter followers and categorized each tweet's content into 1 of 36 different pre-set categories representing broad interest areas like sports, politics, fashion, and so on. Using clustering methods, we will identify common traits amongst groups of your followers so that you can tailor advertisements to focus on those sets of intersets, increasing interactions on your sponsored content which will increase NutrientH20's brand awareness and hopefully sales.
+
+The data generating process involved contracted workers from Amazon's Mechanical Turk service categorize the content of each tweet, which allows for potential errors. While generally reliable, we can't expect the data to be 100% accurate to what our sample audience is, as the contractors could make mistakes in categorization. Another worry is spam and pornographic bot accounts in the sample. While there were process to remove like spam accounts, there is the possibility that spam accounts do make it through. However, we looked through the data and there were only 48 accounts marked as having made a spam post, with none having more than 8% of posts marked as spam. This leaves us confident that there are no spam bots in the sample we were given to analyze. As for pornographic accounts, it's hard to quantify since the category for "adult" tweets is somewhat vague in it's meaning. To be safe and err on the side of not ruling out too many potential customers, we only removed observations from the data that posted adult content 25% of the time or more, approximately 70 of the 7882 accounts in the sample. This ensure that we don't bias the analyses with non-relevant pornographic accounts without drastically shifting the composition of the data.
+
 
 ```{r social_preprocessing, include=FALSE}
 
@@ -337,6 +396,7 @@ social_freq = subset(social_freq[social_freq$adult < 0.25 , -c(35:36)])
 ```
 
 ```{r cluster_social, include=FALSE}
+# This is for myself, too technical for NutrientH20
 library(LICORS)
 social_elbow = data.frame(K = as.integer(), Within_Error = as.numeric())
 # Homemade elbow plot!
@@ -354,23 +414,85 @@ ggplot(data=social_elbow, mapping = aes(x = K, y = Within_Error)) +
 
 ## Results
 
+Our clustering analysis process led us to define 6 different clusters of users, what we will define as marketing segments. One-by-one, we will give quick explanations for each of these clusters. The important thing to keep in mind with the cluster values we see below: positive numbers mean users in that cluster have post frequencies in those categories that are above the sample average. We will use these higher-than-average post category frequencies to determine characteristics of the group.
+
 ```{r social_final_cluster}
 
 # Originally wasn't going to, but we need to scale the data to get better intuitions into what these clusters represent
-
+set.seed(14)
 social_freq_scaled = scale(social_freq, center=TRUE, scale=TRUE)
 
 clust6_social = kmeanspp(social_freq_scaled, k = 6, nstart = 25)
 
 Social_Cluster_1 = clust6_social$center[1,]
 Social_Cluster_2 = clust6_social$center[2,]
-Social_cluster_3 = clust6_social$center[3,]
+Social_Cluster_3 = clust6_social$center[3,]
 Social_Cluster_4 = clust6_social$center[4,]
 Social_Cluster_5 = clust6_social$center[5,]
 Social_cluster_6 = clust6_social$center[6,]
+social_obs = nrow(social_freq_scaled)
 ```
 
 
+### Cluster 1 - Beauty / Lifestyle
+
+```{r Social_Clust_1, echo = FALSE}
+Social_Cluster_1
+C1_obs = sum(clust6_social$cluster == 1)
+clust1_pct = round(100*C1_obs / social_obs, 2)
+```
+
+There are `r C1_obs` in this cluster, or approximately `r clust1_pct` of our sample. Accounts in this sample have relative high amounts of cooking, fashion, and beauty content compared to the rest of the sample. This signifies a focus on beauty and lifestyle, potentially having crossover influence with Instagram as well. For accounts in this cluster, advertisements or partnerships that focus on the health benefits of NutrientH20 would be the best strategy.
+
+### Cluster 2 - Working Professionals
+```{r Social_Clust_2, echo = FALSE}
+Social_Cluster_2
+C2_obs = sum(clust6_social$cluster == 2)
+clust2_pct = Social_Cluster_2 / social_obs
+```
+There are `r C2_obs` in this cluster, or approximately `r clust2_pct` of our sample. Accounts in this cluster have higher than average frequencise of news, politics, automotive, computers, and travel content. This is a bit of a broader category of people in various working professions, with a cross-sectional interest in news and politics. Since these people are generally using their twitter accounts for their work interests, advertising to these accounts should focus on how NutrientH20 products can improve work performance and focus.
+
+### Cluster 3 - Parents
+```{r Social_Clust_3, echo = FALSE}
+Social_Cluster_3
+C3_obs = sum(clust6_social$cluster == 3)
+clust3_pct = Social_Cluster_3 / social_obs
+```
+
+There are `r C3_obs` in this cluster, or approximately `r clust3_pct` of our sample. This cluster is centered around people who post more about food, sports, school, religion, family, and parenting. We would likely identify this cluster as parents considering the higher-than-average frequencies of school, family, and parenting. Marketing for these groups could invoke the health benefits of NutrientH20 products for children, since parents would but for themselves and for their children. As well, since this category contains people who post a lot of sports content, endorsements from sports celebrities could be influential for this cluster. 
+
+### Cluster 4 - General
+```{r Social_Clust_4, echo = FALSE}
+Social_Cluster_4
+C4_obs = sum(clust6_social$cluster == 4)
+clust4_pct = Social_Cluster_4 / social_obs
+```
+
+There are `r C4_obs` in this cluster, or approximately `r clust4_pct` of our sample. This is the largest cluster in our sample and is defined by the lack of strong interests. With the most frequent categories being chatter and photo sharing, accounts in this cluster don't have the same defined interests that other clusters exhibit. Because of this, we would recommend to save money by not use targeted advertising for these groups and instead relying on your general advertising campaigns to reach these accounts. 
+
+### Cluster 5 - University Students / Gamers
+```{r Social_Clust_5, echo = FALSE}
+Social_Cluster_5
+C5_obs = sum(clust6_social$cluster == 5)
+clust5_pct = Social_Cluster_5 / social_obs
+```
+
+There are `r C5_obs` in this cluster, or approximately `r clust5_pct` of our sample. Accounts in this cluster tend to exhibit higher than average post frequencies for online gaming, college, and playing sports. In this instance, the sports category could be partially referring to eSports, a competitive form of online gaming. Either way, accounts in this cluster appear to consist mostly of college-aged people who either game or play sports. It is likely that the people in this cluster would be interested in drinks that improve mental focus without causing burnout, which college students are prone to. Advertising directly to those two needs would help to improve sales, while looking at sponsoring eSports competitions or leagues could increase your customer base.
+
+Cluster 6 - Physical Fitness
+```{r Social_Clust_6, echo = FALSE}
+clust6_social$center[6,]
+C6_obs = sum(clust6_social$cluster == 6)
+clust6_pct = clust6_social$center[6,] / social_obs
+```
+
+There are `r C6_obs` in this cluster, or approximately `r clust6_pct` of our sample. Accounts in this cluster feature posts that more heavily focus on the outdoors, health and nutrition, and personal fitness. There are two obvious actions to take for accounts in this cluster:
+
+1. Promote NutrientH20 products that have demonstrated positive health effects.
+2. For more influential accounts in this cluster, seek to request sponsored content.
+
+Doing both of these will increase NutrientH20's consumer base amongst the health and fitness communities, which are generally more likely to be interested in health drinks to begin with.
 
 ## Conclusion
 
+Using cluster analysis, we have found 5 identifable marketing segments amongst NutrientH20 twitter followers: Beauty/Lifestyle, Working Professionals, Parents, University Students/Gamers, and Health/Fitness. Utilizing effective targeted advertising towards these groups, focusing on their common interests and specific needs, will help to increase NutrientH20's reach in these segments. As well, we have that accounts more focused on simple chatter and sharing photos don't have specific interests that can be marketed to, meaning resources are better used not focusing on those accounts. Overall, we believe that strategic utilization of the results we have found using statistical clustering methods and the suggestions we created from our findings will result in increases for followers of NutrientH2O's twitter account and sales of NutrientH20 products. 
