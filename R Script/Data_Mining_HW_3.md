@@ -88,13 +88,13 @@ simple glance at the rent column shows that rent appears to be higher in
 green certified buildings than in non-green certified buildings.
 However, there also seems to be a big difference in the rental rate
 between EnergyStar certified buildings and LEED certified buildings,
-0.8326173$ per square foot. Looking closer at these tables, there are
-large differences in feature variables amongst the different populations
-of building types. The starkest difference is in days of temperature
+0.833$ per square foot. Looking closer at these tables, there are large
+differences in feature variables amongst the different populations of
+building types. The starkest difference is in days of temperature
 control, defined as the number of days where the building needs heating
-or cooling. EnergyStar buildings need 592.6603176 days fewer of heating
-or cooling than buildings with no green certification, but LEED
-buildings actually need 785.257577 days more.
+or cooling. EnergyStar buildings need 593 days fewer of heating or
+cooling than buildings with no green certification, but LEED buildings
+actually need 785 days more.
 
 These differences necessitate more formal evaluations of the data.
 Particularly, we will evaluate the effect of certification separately
@@ -454,12 +454,15 @@ process captures certain variations of all 11 features variables into
 each principal component vector. In this visualization, we look at the
 first two principal components.
 
-![](Data_Mining_HW_3_files/figure-markdown_strict/wine_PCA-1.png) Our
-principal component vectors do a fairly good job of separating red and
-white wines. White wines tend to score more positively in principal
+![](Data_Mining_HW_3_files/figure-markdown_strict/wine_PCA-1.png)
+
+Our principal component vectors do a fairly good job of separating red
+and white wines. White wines tend to score more positively in principal
 component 1 and a bit lower on average in principal component 2. But
 what does that mean? To answer that, we have to see what are in our
-principal components. \#\#\#\# Principal Component 1
+principal components.
+
+#### Principal Component 1
 
     ##        fixed.acidity     volatile.acidity          citric.acid 
     ##          -0.23879890          -0.38075750           0.15238844 
@@ -517,21 +520,6 @@ Sauvignon and a cheap variant that anyone could pick up in the store. Do
 our principal components, based on objective measures of the chemical
 properties of wine, tell us anything about the expert-judged quality of
 the wine?
-
-    qplot(scores[,1], scores[,2], color=wine$quality, xlab='Component 1', ylab='Component 2') + 
-        labs(title="Wine Quality across Principal Components") + 
-        scale_colour_gradient2(
-      low = "red",
-      mid = "white",
-      high = "Green",
-      midpoint = 6,
-      space = "Lab",
-      na.value = "grey50",
-      guide = "colourbar",
-      aesthetics = "colour"
-    ) +
-    theme_dark()
-
 ![](Data_Mining_HW_3_files/figure-markdown_strict/pca_quality-1.png)
 
 Principal component one does not tell us very much about quality, as
@@ -616,7 +604,7 @@ post category frequencies to determine characteristics of the group.
     ##          fashion   small_business 
     ##       1.99441344      -0.05777160
 
-There are 817 accounts in this cluster, or approximately 14.4% of our
+There are 817 accounts in this cluster, or approximately 10.46% of our
 sample. Accounts in this sample have relative high amounts of cooking,
 fashion, and beauty content compared to the rest of the sample. This
 signifies a focus on beauty and lifestyle, potentially having crossover
@@ -645,7 +633,7 @@ NutrientH20 would be the best strategy.
     ##          fashion   small_business 
     ##      -0.34071706      -0.05216397
 
-There are 1176 accounts in this cluster, or approximately 17.55% of our
+There are 1176 accounts in this cluster, or approximately 15.06% of our
 sample. Accounts in this cluster have higher than average frequencise of
 news, politics, automotive, computers, and travel content. This is a bit
 of a broader category of people in various working professions, with a
@@ -675,7 +663,7 @@ can improve work performance and focus.
     ##          fashion   small_business 
     ##      -0.17740345      -0.07315778
 
-There are 1124 accounts in this cluster, or approximately 10.46% of our
+There are 1124 accounts in this cluster, or approximately 14.40% of our
 sample. This cluster is centered around people who post more about food,
 sports, school, religion, family, and parenting. We would likely
 identify this cluster as parents considering the higher-than-average
@@ -707,7 +695,7 @@ cluster.
     ##          fashion   small_business 
     ##      -0.18719829       0.16582999
 
-There are 2615 accounts in this cluster, or approximately 15.06% of our
+There are 2615 accounts in this cluster, or approximately 33.50% of our
 sample. This is the largest cluster in our sample and is defined by the
 lack of strong interests. With the most frequent categories being
 chatter and photo sharing, accounts in this cluster don’t have the same
@@ -737,7 +725,7 @@ accounts.
     ##          fashion   small_business 
     ##     -0.252568935      0.002996711
 
-There are 2615 accounts in this cluster, or approximately 14.4% of our
+There are 705 accounts in this cluster, or approximately 9.03% of our
 sample. Accounts in this cluster tend to exhibit higher than average
 post frequencies for online gaming, college, and playing sports. In this
 instance, the sports category could be partially referring to eSports, a
@@ -770,7 +758,7 @@ competitions or leagues could increase your customer base.
     ##          fashion   small_business 
     ##     -0.252568935      0.002996711
 
-There are 705 accountsin this cluster, or approximately 14.4% of our
+There are 1370 accounts in this cluster, or approximately 17.55% of our
 sample. Accounts in this cluster feature posts that more heavily focus
 on the outdoors, health and nutrition, and personal fitness. There are
 two obvious actions to take for accounts in this cluster:
